@@ -1,8 +1,11 @@
 #include "game.h"
 #include "environment.h"
+#include "camera.h"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
@@ -10,8 +13,8 @@
 #include <SDL2/SDL.h>
 
 const char *GAME_TITLE = "Gamezer";
-const int SCREEN_WIDTH = 900;
-const int SCREEN_HEIGHT = 600;
+int screen_width = 900;
+int screen_height = 600;
 
 
 enum GAME_STATE {
@@ -30,7 +33,7 @@ int start_game(void) {
 		fprintf(stderr, "SDL couldn't initialize, SDL_ERROR: %s\n", SDL_GetError());
 	}
 
-	window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
 	if (window == NULL) {
 		fprintf(stderr, "SDL couldn't create window, SDL_ERROR: %s\n", SDL_GetError());
 	}
@@ -40,11 +43,12 @@ int start_game(void) {
 		fprintf(stderr, "SDL couldn't create screen surface, SDL_ERROR: %s\n", SDL_GetError());
 	}
 
-	SDL_Rect screen_surface_rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect screen_surface_rect = {0, 0, screen_width, screen_height};
 	SDL_FillRect(screen_surface, &screen_surface_rect, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
 	SDL_UpdateWindowSurface(window);
 
 	Level *lvl = initialize_default_level();
+	initialize_camera(lvl);
 
 	SDL_Event e;
 
@@ -54,7 +58,31 @@ int start_game(void) {
 		SDL_PollEvent(&e);
 		if (e.type == SDL_QUIT) {
 			quit = true;
+		} else if (e.type == SDL_KEYDOWN) {
+			switch (e.key.keysym.sym) {
+				case SDLK_RIGHT:
+					camera_center_pos_x_m += (int) (capture_window_width_m / 5);
+					break;
+				case SDLK_LEFT:
+					camera_center_pos_x_m -= (int) (capture_window_width_m / 5);
+					break;
+				case SDLK_UP:
+					camera_center_pos_y_m += (int) (capture_window_height_m / 5);
+					break;
+				case SDLK_DOWN:
+					camera_center_pos_y_m -= (int) (capture_window_height_m / 5);
+					break;
+				case SDLK_MINUS:
+					zoom_out();
+					printf("Camera capture window width and height = %f, %f\n", capture_window_width_m, capture_window_height_m);
+					break;
+				case SDLK_EQUALS:
+					zoom_in();
+					printf("Camera capture window width and height = %f, %f\n", capture_window_width_m, capture_window_height_m);
+					break;
+			}
 		}
+		// printf("Camera position: (%f, %f)\n", camera_center_pos_x_m, camera_center_pos_y_m);
 		SDL_FillRect(screen_surface, &screen_surface_rect, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
 		draw_default_level(lvl, screen_surface);
 		SDL_UpdateWindowSurface(window);

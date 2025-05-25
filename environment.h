@@ -10,19 +10,23 @@ typedef struct {
 } Color;
 
 typedef struct {
-	int x;
-	int y;
-	int width;
-	int height;
+	float x_m;
+	float y_m;
+	float width_m;
+	float height_m;
 	Color color;
-	// TODO: texture
 } Block;
 
 typedef struct {
-	int width;
-	int height;
+	float x_m, y_m;
+} Coordinate;
+
+typedef struct {
+	float width_m;
+	float height_m;
 	int blocks_len;
 	Block *blocks;
+	Coordinate starting_point;
 } Level;
 
 Level *initialize_default_level(void);
