@@ -76,7 +76,6 @@ void update_character_position(Level *lvl) {
 			}
 		}
 
-		printf("Character position: (%f, %f)\n", character.x_m, character.y_m);
 		character.last_update_tick = tick;
 	}
 		

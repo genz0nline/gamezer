@@ -85,13 +85,9 @@ bool check_block_collision(Block *block, float *x_collision_m, float *y_collisio
 
 	// In case of collision we have to push character back a little bit
 	if ((2 * character.x_m + character.w_m) <= (2 * block->x_m + block->width_m)) {
-		printf("EVERYBODY LOOKS TO THE LEFT!\n");
 		*x_collision_m = block->x_m - character.x_m - character.w_m;
-		printf("x_collision_m value = %f\n", *x_collision_m);
 	} else {
-		printf("EVERYBODY LOOKS TO THE RIGHT!\n");
 		*x_collision_m = block->x_m + block->width_m - character.x_m;
-		printf("x_collision_m value = %f\n", *x_collision_m);
 	}
 
 	if ((2 * character.y_m + character.h_m) <= (2 * block->y_m + block->height_m)) {
