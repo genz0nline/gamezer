@@ -1,7 +1,3 @@
-#include "game.h"
-#include "character.h"
-#include "environment.h"
-#include "camera.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_pixels.h>
@@ -12,6 +8,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+
+#include "game.h"
+#include "character.h"
+#include "environment.h"
+#include "camera.h"
+#include "input.h"
 
 const char *GAME_TITLE = "Gamezer";
 int screen_width = 900;
@@ -51,23 +53,13 @@ int start_game(void) {
 	Level *lvl = initialize_default_level();
 	spawn_character(lvl);
 	initialize_camera(lvl);
+	initialize_input();
 
 	SDL_Event e;
-
-	bool right_pressed;
-	bool left_pressed;
-	bool up_pressed;
-	bool down_pressed;
 
 	printf("Game has started...\n");
 	bool quit = false;
 	while (!quit) {
-
-		right_pressed = false;
-		left_pressed = false;
-		up_pressed = false;
-		down_pressed = false;
-
 		SDL_PollEvent(&e);
 		if (e.type == SDL_QUIT) {
 			quit = true;
@@ -94,37 +86,27 @@ int start_game(void) {
 					printf("Camera capture window width and height = %f, %f\n", capture_window_width_m, capture_window_height_m);
 					break;
 			}
+		} else if (e.type == SDL_KEYUP) {
+			switch (e.key.keysym.sym) {
+				case SDLK_RIGHT:
+					right_pressed = false;
+					break;
+				case SDLK_LEFT:
+					left_pressed = false;
+					break;
+				case SDLK_UP:
+					up_pressed = false;
+					break;
+				case SDLK_DOWN:
+					down_pressed = false;
+					break;
+			}
 		}
 
-		if (right_pressed) {
-			if (character.x_m <= lvl->width_m - character.w_m - 1)
-				character.x_m += 1;
-			else
-				character.x_m = lvl->width_m - character.w_m;
-		}
-		if (left_pressed) {
-			if (character.x_m >= 1)
-				character.x_m -= 1;
-			else 
-				character.x_m = 0;
-		}
-		if (up_pressed) {
-			if (character.y_m <= lvl->height_m - 1)
-				character.y_m += 1;
-			else 
-				character.y_m = lvl->height_m;
-		}
-		if (down_pressed) {
-			if (character.y_m >= character.h_m + 1)
-				character.y_m -= 1;
-			else
-				character.y_m = character.h_m;
-		}
-		center_camera(lvl);
-
-		// printf("Camera position: (%f, %f)\n", camera_center_pos_x_m, camera_center_pos_y_m);
 		SDL_FillRect(screen_surface, &screen_surface_rect, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
 		draw_default_level(lvl, screen_surface);
+		update_character_position(lvl);
+		center_camera(lvl);
 		draw_character(lvl, screen_surface);
 		SDL_UpdateWindowSurface(window);
 	}

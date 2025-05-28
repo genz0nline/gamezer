@@ -13,7 +13,7 @@ float ratio;
 float zero_x, zero_y;
 float x_m_to_p, y_m_to_p;
 
-const int DEFAULT_CAPTURE_WINDOW_WIDTH_M = 20;
+const int DEFAULT_CAPTURE_WINDOW_WIDTH_M = 40;
 const int MIN_CAPTURE_WINDOW_WIDTH_M = 1;
 const int MAX_CAPTURE_WINDOW_WIDTH_M = 40;
 
@@ -39,8 +39,8 @@ void calculate_m_to_p_coordinates(float x_m, float y_m, int *x, int *y) {
 }
 
 void calculate_m_to_p_dimesions(float w_m, float h_m, int *w, int* h) {
-	*w = (int) ABS(w_m * x_m_to_p);
-	*h = (int) ABS(h_m * y_m_to_p);
+	*w = (int) (ABS(w_m * x_m_to_p));
+	*h = (int) (ABS(h_m * y_m_to_p));
 }
 
 void center_camera(Level *lvl) {
