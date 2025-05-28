@@ -1,4 +1,5 @@
 #include "game.h"
+#include "character.h"
 #include "environment.h"
 #include "camera.h"
 #include <SDL2/SDL_events.h>
@@ -48,29 +49,41 @@ int start_game(void) {
 	SDL_UpdateWindowSurface(window);
 
 	Level *lvl = initialize_default_level();
+	spawn_character(lvl);
 	initialize_camera(lvl);
 
 	SDL_Event e;
 
+	bool right_pressed;
+	bool left_pressed;
+	bool up_pressed;
+	bool down_pressed;
+
 	printf("Game has started...\n");
 	bool quit = false;
 	while (!quit) {
+
+		right_pressed = false;
+		left_pressed = false;
+		up_pressed = false;
+		down_pressed = false;
+
 		SDL_PollEvent(&e);
 		if (e.type == SDL_QUIT) {
 			quit = true;
 		} else if (e.type == SDL_KEYDOWN) {
 			switch (e.key.keysym.sym) {
 				case SDLK_RIGHT:
-					camera_center_pos_x_m += (int) (capture_window_width_m / 5);
+					right_pressed = true;
 					break;
 				case SDLK_LEFT:
-					camera_center_pos_x_m -= (int) (capture_window_width_m / 5);
+					left_pressed = true;
 					break;
 				case SDLK_UP:
-					camera_center_pos_y_m += (int) (capture_window_height_m / 5);
+					up_pressed = true;
 					break;
 				case SDLK_DOWN:
-					camera_center_pos_y_m -= (int) (capture_window_height_m / 5);
+					down_pressed = true;
 					break;
 				case SDLK_MINUS:
 					zoom_out();
@@ -82,9 +95,37 @@ int start_game(void) {
 					break;
 			}
 		}
+
+		if (right_pressed) {
+			if (character.x_m <= lvl->width_m - character.w_m - 1)
+				character.x_m += 1;
+			else
+				character.x_m = lvl->width_m - character.w_m;
+		}
+		if (left_pressed) {
+			if (character.x_m >= 1)
+				character.x_m -= 1;
+			else 
+				character.x_m = 0;
+		}
+		if (up_pressed) {
+			if (character.y_m <= lvl->height_m - 1)
+				character.y_m += 1;
+			else 
+				character.y_m = lvl->height_m;
+		}
+		if (down_pressed) {
+			if (character.y_m >= character.h_m + 1)
+				character.y_m -= 1;
+			else
+				character.y_m = character.h_m;
+		}
+		center_camera(lvl);
+
 		// printf("Camera position: (%f, %f)\n", camera_center_pos_x_m, camera_center_pos_y_m);
 		SDL_FillRect(screen_surface, &screen_surface_rect, SDL_MapRGB(screen_surface->format, 0xFF, 0xFF, 0xFF));
 		draw_default_level(lvl, screen_surface);
+		draw_character(lvl, screen_surface);
 		SDL_UpdateWindowSurface(window);
 	}
 

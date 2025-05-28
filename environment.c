@@ -1,5 +1,6 @@
 #include "environment.h"
 #include "camera.h"
+#include "character.h"
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_surface.h>
@@ -13,38 +14,43 @@ const int DEFAULT_BLOCK_HEIGHT_M = 2;
 Level *initialize_default_level(void) {
 
 	Block *blocks = (Block *)malloc(4 * sizeof(Block));
-
-	blocks[0].x_m = 0;
-	blocks[0].y_m = 0;
-	blocks[0].width_m = DEFAULT_LEVEL_WIDTH_M;
-	blocks[0].height_m = DEFAULT_BLOCK_HEIGHT_M;
-	blocks[0].color = (Color){0, 0, 0,};
-
-	blocks[1].x_m = 100;
-	blocks[1].y_m = 100;
-	blocks[1].width_m = 200;
-	blocks[1].height_m = 20;
-	blocks[1].color = (Color){0, 0, 0,};
-
-	blocks[2].x_m = 350;
-	blocks[2].y_m = 200;
-	blocks[2].width_m = 200;
-	blocks[2].height_m = 20;
-	blocks[2].color = (Color){0, 0, 0,};
-
-	blocks[3].x_m = 600;
-	blocks[3].y_m = 100;
-	blocks[3].width_m = 200;
-	blocks[3].height_m = 20;
-	blocks[3].color = (Color){0, 0, 0,};
-
 	Level *lvl = (Level *)malloc(sizeof(Level));
+
+	lvl->blocks_len = 0;
+
+	blocks[1].x_m = 0;
+	blocks[1].y_m = DEFAULT_BLOCK_HEIGHT_M;
+	blocks[1].width_m = DEFAULT_LEVEL_WIDTH_M;
+	blocks[1].height_m = DEFAULT_BLOCK_HEIGHT_M;
+	blocks[1].color = (Color){0, 0, 0,};
+	lvl->blocks_len++;
+
+	blocks[0].x_m = 20;
+	blocks[0].y_m = 4;
+	blocks[0].width_m = 2;
+	blocks[0].height_m = 4;
+	blocks[0].color = (Color){0, 0, 0xFF,};
+	lvl->blocks_len++;
+
+	// blocks[2].x_m = 350;
+	// blocks[2].y_m = 200;
+	// blocks[2].width_m = 200;
+	// blocks[2].height_m = 20;
+	// blocks[2].color = (Color){0, 0, 0xFF,};
+	// lvl->blocks_len++;
+
+	// blocks[3].x_m = 600;
+	// blocks[3].y_m = 100;
+	// blocks[3].width_m = 200;
+	// blocks[3].height_m = 20;
+	// blocks[3].color = (Color){0, 0, 0,};
+	// lvl->blocks_len++;
+
 	lvl->width_m = DEFAULT_LEVEL_WIDTH_M;
 	lvl->height_m = DEFAULT_LEVEL_HEIGHT_M;
 	lvl->blocks = blocks;
-	lvl->blocks_len = 4;
-	lvl->starting_point.x_m = 25;
-	lvl->starting_point.y_m = 25;
+	lvl->starting_point.x_m = 1;
+	lvl->starting_point.y_m = DEFAULT_BLOCK_HEIGHT_M + 2;
 
 	initialize_camera(lvl);
 
