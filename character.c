@@ -57,8 +57,8 @@ void update_character_position(Level *lvl) {
 
 		character.x_m = MIN(character.x_m, lvl->width_m - character.w_m);
 		character.x_m = MAX(character.x_m, 0);
-		character.y_m = MIN(character.y_m, lvl->height_m);
-		character.y_m = MAX(character.y_m, character.h_m);
+		character.y_m = MIN(character.y_m, lvl->height_m - character.h_m);
+		character.y_m = MAX(character.y_m, 0);
 
 		int blocks_len = lvl->blocks_len;
 
@@ -68,12 +68,16 @@ void update_character_position(Level *lvl) {
 			x_collision_m = 0, y_collision_m = 0;
 
 			if (check_block_collision(block, &x_collision_m, &y_collision_m)) {
+				printf("Found collision\n");
 				if ((ABS(x_collision_m)) > (ABS(y_collision_m)))
 					character.y_m += y_collision_m;
 				else
 					character.x_m += x_collision_m;
 
+			} else {
+				printf("\n");
 			}
+
 		}
 
 		character.last_update_tick = tick;

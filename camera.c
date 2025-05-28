@@ -44,11 +44,11 @@ void calculate_m_to_p_dimesions(float w_m, float h_m, int *w, int* h) {
 }
 
 void center_camera(Level *lvl) {
-	camera_center_pos_x_m = character.x_m;
+	camera_center_pos_x_m = character.x_m + character.w_m * .5;
 	camera_center_pos_x_m = MIN(lvl->width_m - capture_window_width_m / 2, camera_center_pos_x_m);
 	camera_center_pos_x_m = MAX(capture_window_width_m / 2, camera_center_pos_x_m);
 
-	camera_center_pos_y_m = character.y_m;
+	camera_center_pos_y_m = character.y_m + character.h_m * .5;
 	camera_center_pos_y_m = MIN(lvl->height_m - capture_window_height_m / 2, camera_center_pos_y_m);
 	camera_center_pos_y_m = MAX(capture_window_height_m / 2, camera_center_pos_y_m);
 }
