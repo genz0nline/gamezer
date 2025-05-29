@@ -2,6 +2,7 @@
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_timer.h>
@@ -17,8 +18,8 @@
 #include "input.h"
 
 const char *GAME_TITLE = "Gamezer";
-int screen_width = 900;
-int screen_height = 600;
+int screen_width = 1920;
+int screen_height = 1080;
 
 
 enum GAME_STATE {
@@ -27,17 +28,21 @@ enum GAME_STATE {
 	GAME_STATE_PAUSED,
 };
 
+typedef struct Game {
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+} Game;
 
 int start_game(void) {
 
 	SDL_Window *window = NULL;
 	SDL_Surface *screen_surface = NULL;
 
-	if (SDL_Init(SDL_INIT_VIDEO & SDL_INIT_AUDIO) < 0) {
+	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		fprintf(stderr, "SDL couldn't initialize, SDL_ERROR: %s\n", SDL_GetError());
 	}
 
-	window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_FULLSCREEN);
 	if (window == NULL) {
 		fprintf(stderr, "SDL couldn't create window, SDL_ERROR: %s\n", SDL_GetError());
 	}

@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "camera.h"
 #include "character.h"
 #include "environment.h"
@@ -13,7 +14,7 @@ float ratio;
 float zero_x, zero_y;
 float x_m_to_p, y_m_to_p;
 
-const int DEFAULT_CAPTURE_WINDOW_WIDTH_M = 40;
+const int DEFAULT_CAPTURE_WINDOW_WIDTH_M = 20;
 const int MIN_CAPTURE_WINDOW_WIDTH_M = 1;
 const int MAX_CAPTURE_WINDOW_WIDTH_M = 40;
 
