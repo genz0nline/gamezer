@@ -34,7 +34,8 @@ void spawn_character(Level *lvl) {
 	character.x_speed_m = DEFAULT_SPEED;
 	character.y_speed_m = 0;
 	character.jumped = false;
-	character.jump_start = SDL_GetTicks();
+	character.jump_finished = SDL_GetTicks();
+	character.jump_start = character.jump_finished - 1;
 }
 
 SDL_Rect get_character_rect(void) {
@@ -99,13 +100,16 @@ void update_character_position(Level *lvl) {
 }
 
 void start_jump(void) {
+	if (character.jump_finished < character.jump_start)
+		return;
+
 	if (!character.jumped) {
 		printf("Jump!\n");
 		character.jumped = true;
 		character.jumping = true;
 		character.jump_start = SDL_GetTicks();
 		character.y_speed_m = 0;
-	} else if (!character.jumped_twice) {
+	} else if (!character.jumping && !character.jumped_twice) {
 		printf("Double jump!\n");
 		character.jumped_twice = true;
 		character.jumping = true;
@@ -118,6 +122,7 @@ void start_jump(void) {
 
 void finish_jump(void) {
 	character.jumping = false;
+	character.jump_finished = SDL_GetTicks();
 }
 
 void draw_character(Level *lvl, SDL_Surface *surface) {

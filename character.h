@@ -17,6 +17,7 @@ typedef struct {
 	bool jumped_twice;
 	bool jumping;
 	Uint32 jump_start;
+	Uint32 jump_finished;
 } Character;
 
 extern Character character;
