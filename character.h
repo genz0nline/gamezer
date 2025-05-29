@@ -24,7 +24,7 @@ extern Character character;
 
 void spawn_character(Level *lvl);
 void update_character_position(Level *lvl);
-void draw_character(Level *lvl, SDL_Surface *surface);
+void draw_character(Level *lvl, SDL_Renderer *renderer);
 void start_jump(void);
 void finish_jump(void);
 

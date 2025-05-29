@@ -1,10 +1,21 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_keycode.h>
+
 extern const char *GAME_TITLE;
 extern int screen_width;
 extern int screen_height;
 
+typedef struct Game {
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+} Game;
+
 int start_game(void);
+
+Game initialize_game(void);
+bool game_cleanup(Game *game, int exit_code);
 
 #endif

@@ -11,7 +11,7 @@ extern float capture_window_height_m;
 void initialize_camera(Level *lvl);
 void zoom_in(void);
 void zoom_out(void);
-void center_camera(Level *lvl);
+void update_camera_position(Level *lvl);
 void calculate_m_to_p_coefficients(Level *lvl);
 void calculate_m_to_p_coordinates(float x_m, float y_m, int *x, int *y);
 void calculate_m_to_p_dimesions(float w_m, float h_m, int *w, int* h);

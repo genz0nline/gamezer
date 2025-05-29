@@ -1,5 +1,6 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -99,14 +100,15 @@ bool check_block_collision(Block *block, float *x_collision_m, float *y_collisio
 	return true;
 }
 
-void draw_default_level(Level *lvl, SDL_Surface *surface) {
+void draw_default_level(Level *lvl, SDL_Renderer *renderer) {
 
 	calculate_m_to_p_coefficients(lvl);
 
 	int blocks_len = lvl->blocks_len;
 	for (Block *block = lvl->blocks; --blocks_len >= 0; block++) {
 		SDL_Rect rect = get_block_rect(block);
-		SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, block->color.R, block->color.G, block->color.B));
+		SDL_SetRenderDrawColor(renderer, block->color.R, block->color.G, block->color.B, SDL_ALPHA_OPAQUE);
+		SDL_RenderFillRect(renderer, &rect);
 	}
 }
 

@@ -44,7 +44,7 @@ void calculate_m_to_p_dimesions(float w_m, float h_m, int *w, int* h) {
 	*h = (int) (ABS(h_m * y_m_to_p));
 }
 
-void center_camera(Level *lvl) {
+void update_camera_position(Level *lvl) {
 	camera_center_pos_x_m = character.x_m + character.w_m * .5;
 	camera_center_pos_x_m = MIN(lvl->width_m - capture_window_width_m / 2, camera_center_pos_x_m);
 	camera_center_pos_x_m = MAX(capture_window_width_m / 2, camera_center_pos_x_m);

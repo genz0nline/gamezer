@@ -1,7 +1,7 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL.h>
 
 typedef struct {
 	char R;
@@ -31,7 +31,7 @@ typedef struct {
 
 Level *initialize_default_level(void);
 void free_level(Level *lvl);
-void draw_default_level(Level *lvl, SDL_Surface *surface);
+void draw_default_level(Level *lvl, SDL_Renderer *renderer);
 bool check_block_collision(Block *block, float *x_collision_m, float *y_collision_m);
 
 #endif

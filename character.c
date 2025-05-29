@@ -1,3 +1,5 @@
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_render.h>
 #include <stdbool.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_stdinc.h>
@@ -125,10 +127,11 @@ void finish_jump(void) {
 	character.jump_finished = SDL_GetTicks();
 }
 
-void draw_character(Level *lvl, SDL_Surface *surface) {
+void draw_character(Level *lvl, SDL_Renderer *renderer) {
 	calculate_m_to_p_coefficients(lvl);
 
 	SDL_Rect rect = get_character_rect();
-	SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, character.color.R, character.color.G, character.color.B));
+	SDL_SetRenderDrawColor(renderer, character.color.R, character.color.G, character.color.B, SDL_ALPHA_OPAQUE);
+	SDL_RenderFillRect(renderer, &rect);
 }
 
