@@ -37,7 +37,7 @@ bool game_cleanup(Game *game, int exit_code) {
 	SDL_DestroyWindow(game->window);
 	SDL_Quit();
 
-	printf("Game has ended...\n");
+	printf("Game has ended!\n");
 	exit(exit_code);
 }
 
@@ -87,6 +87,8 @@ int start_game(void) {
 	initialize_input();
 
 	SDL_Event e;
+
+	printf("Game has started...\n");
 
 	while (true) {
 		SDL_PollEvent(&e);
