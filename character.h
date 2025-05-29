@@ -11,7 +11,12 @@ typedef struct {
 	int max_hp;
 	int current_hp;
 	Uint32 last_update_tick;
-	int speed_m;
+	float x_speed_m;
+	float y_speed_m;
+	bool jumped;
+	bool jumped_twice;
+	bool jumping;
+	Uint32 jump_start;
 } Character;
 
 extern Character character;
@@ -19,5 +24,7 @@ extern Character character;
 void spawn_character(Level *lvl);
 void update_character_position(Level *lvl);
 void draw_character(Level *lvl, SDL_Surface *surface);
+void start_jump(void);
+void finish_jump(void);
 
 #endif

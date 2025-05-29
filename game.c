@@ -4,6 +4,7 @@
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -72,10 +73,7 @@ int start_game(void) {
 					left_pressed = true;
 					break;
 				case SDLK_UP:
-					up_pressed = true;
-					break;
-				case SDLK_DOWN:
-					down_pressed = true;
+					start_jump();
 					break;
 				case SDLK_MINUS:
 					zoom_out();
@@ -95,10 +93,7 @@ int start_game(void) {
 					left_pressed = false;
 					break;
 				case SDLK_UP:
-					up_pressed = false;
-					break;
-				case SDLK_DOWN:
-					down_pressed = false;
+					finish_jump();
 					break;
 			}
 		}

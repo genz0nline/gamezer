@@ -4,6 +4,7 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include <stdio.h>
 #include "character.h"
 #include "camera.h"
 #include "environment.h"
@@ -16,6 +17,10 @@ const int DEFAULT_SPEED = 10;
 Character character;
 
 const int UPDATE_TICK_RATE = 15;
+const float GRAVITY_FORCE = 98;
+const int MAX_JUMP_FORCE_TIME_MS = 100;
+const float JUMP_FORCE = 400;
+
 
 void spawn_character(Level *lvl) {
 	character.x_m = lvl->starting_point.x_m;
@@ -26,7 +31,10 @@ void spawn_character(Level *lvl) {
 	character.h_m = 2;
 	character.color = (Color) {0xFF, 0x00, 0x00,};
 	character.last_update_tick = SDL_GetTicks();
-	character.speed_m = DEFAULT_SPEED;
+	character.x_speed_m = DEFAULT_SPEED;
+	character.y_speed_m = 0;
+	character.jumped = false;
+	character.jump_start = SDL_GetTicks();
 }
 
 SDL_Rect get_character_rect(void) {
@@ -43,17 +51,19 @@ void update_character_position(Level *lvl) {
 	if (miliseconds_passed >= UPDATE_TICK_RATE) {
 
 		if (right_pressed) {
-			character.x_m += (float) miliseconds_passed * character.speed_m  * .001;
+			character.x_m += (float) miliseconds_passed * character.x_speed_m  * .001;
 		}
 		if (left_pressed) {
-			character.x_m -= (float) miliseconds_passed * character.speed_m * .001;
+			character.x_m -= (float) miliseconds_passed * character.x_speed_m * .001;
 		}
-		if (up_pressed) {
-			character.y_m += (float) miliseconds_passed * character.speed_m * .001;
+
+		if (character.jumping && tick - character.jump_start <= MAX_JUMP_FORCE_TIME_MS) {
+			character.y_speed_m += miliseconds_passed * JUMP_FORCE * .001;
 		}
-		if (down_pressed) {
-			character.y_m -= (float) miliseconds_passed * character.speed_m * .001;
-		}
+		
+
+		character.y_speed_m -= GRAVITY_FORCE * miliseconds_passed * .001;
+		character.y_m += character.y_speed_m * miliseconds_passed * .001;
 
 		character.x_m = MIN(character.x_m, lvl->width_m - character.w_m);
 		character.x_m = MAX(character.x_m, 0);
@@ -68,21 +78,46 @@ void update_character_position(Level *lvl) {
 			x_collision_m = 0, y_collision_m = 0;
 
 			if (check_block_collision(block, &x_collision_m, &y_collision_m)) {
-				printf("Found collision\n");
-				if ((ABS(x_collision_m)) > (ABS(y_collision_m)))
+				if ((ABS(x_collision_m)) > (ABS(y_collision_m))) {
 					character.y_m += y_collision_m;
-				else
+					if (y_collision_m > 0) {
+						character.y_speed_m = MAX(0, character.y_speed_m);
+						character.jumped = false;
+						character.jumped_twice = false;
+					} else if (y_collision_m < 0) {
+						character.y_speed_m = MIN(0, character.y_speed_m);
+					}
+				} else
 					character.x_m += x_collision_m;
 
-			} else {
-				printf("\n");
 			}
 
 		}
 
 		character.last_update_tick = tick;
 	}
-		
+}
+
+void start_jump(void) {
+	if (!character.jumped) {
+		printf("Jump!\n");
+		character.jumped = true;
+		character.jumping = true;
+		character.jump_start = SDL_GetTicks();
+		character.y_speed_m = 0;
+	} else if (!character.jumped_twice) {
+		printf("Double jump!\n");
+		character.jumped_twice = true;
+		character.jumping = true;
+		character.jump_start = SDL_GetTicks();
+		character.y_speed_m = 0;
+	} else {
+		printf("No triple jump allowed!\n");
+	}
+}
+
+void finish_jump(void) {
+	character.jumping = false;
 }
 
 void draw_character(Level *lvl, SDL_Surface *surface) {
