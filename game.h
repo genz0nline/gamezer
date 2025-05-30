@@ -8,6 +8,8 @@ extern const char *GAME_TITLE;
 extern int screen_width;
 extern int screen_height;
 
+#define UPDATE_TICK_RATE	15
+
 typedef struct Game {
 	SDL_Window *window;
 	SDL_Renderer *renderer;

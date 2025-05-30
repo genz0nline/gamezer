@@ -30,7 +30,7 @@ typedef struct {
 extern Character character;
 
 void spawn_character(Level *lvl);
-void update_character_position(Level *lvl);
+void update_character_state(Level *lvl);
 void draw_character(Level *lvl, SDL_Renderer *renderer);
 void start_jump(void);
 void finish_jump(void);

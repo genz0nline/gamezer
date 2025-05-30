@@ -57,7 +57,8 @@ bool initialize_sdl(Game *game) {
 }
 
 void update_game_state(Level *lvl) {
-	update_character_position(lvl);
+	update_level_state(lvl);
+	update_character_state(lvl);
 	update_camera_position(lvl);
 }
 

@@ -10,6 +10,7 @@
 #include "character.h"
 #include "camera.h"
 #include "environment.h"
+#include "game.h"
 #include "input.h"
 #include "utils.h"
 
@@ -18,7 +19,6 @@ const int DEFAULT_SPEED = 10;
 
 Character character;
 
-const int UPDATE_TICK_RATE = 15;
 const float GRAVITY_FORCE = 98;
 const int MAX_JUMP_FORCE_TIME_MS = 100;
 const float JUMP_FORCE = 400;
@@ -96,11 +96,11 @@ SDL_Rect get_health_bar_background_rect(void) {
 	return block_rect;
 }
 
-SDL_Rect get_health_bar_indicator_rect(float ratio) {
+SDL_Rect get_health_bar_indicator_rect(float hp_percentage) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
 	// TODO: Get rid of magic numbers
-	w_m = character.w_m * 1.35 * ratio; 
+	w_m = character.w_m * 1.35 * hp_percentage; 
 	h_m = .25;
 	x_m = character.x_m - .175 *  character.w_m;
 	y_m = character.y_m + character.h_m * 1.2 + .025;
@@ -110,27 +110,27 @@ SDL_Rect get_health_bar_indicator_rect(float ratio) {
 	return block_rect;
 }
 
-void update_character_position(Level *lvl) {
+void update_character_state(Level *lvl) {
 	Uint32 tick = SDL_GetTicks();
-	int miliseconds_passed = tick - character.last_update_tick;
-	if (miliseconds_passed >= UPDATE_TICK_RATE) {
+	int milliseconds_passed = tick - character.last_update_tick;
+	if (milliseconds_passed >= UPDATE_TICK_RATE) {
 
 		if (right_pressed) {
-			character.x_m += (float) miliseconds_passed * character.x_speed_m  * .001;
+			character.x_m += (float) milliseconds_passed * character.x_speed_m  * .001;
 			character.direction = 1;
 		}
 		if (left_pressed) {
-			character.x_m -= (float) miliseconds_passed * character.x_speed_m * .001;
+			character.x_m -= (float) milliseconds_passed * character.x_speed_m * .001;
 			character.direction = -1;
 		}
 
 		if (character.jumping && tick - character.jump_start <= MAX_JUMP_FORCE_TIME_MS) {
-			character.y_speed_m += miliseconds_passed * JUMP_FORCE * .001;
+			character.y_speed_m += milliseconds_passed * JUMP_FORCE * .001;
 		}
 		
 
-		character.y_speed_m -= GRAVITY_FORCE * miliseconds_passed * .001;
-		character.y_m += character.y_speed_m * miliseconds_passed * .001;
+		character.y_speed_m -= GRAVITY_FORCE * milliseconds_passed * .001;
+		character.y_m += character.y_speed_m * milliseconds_passed * .001;
 
 		character.x_m = MIN(character.x_m, lvl->width_m - character.w_m);
 		character.x_m = MAX(character.x_m, 0);
@@ -207,9 +207,9 @@ void draw_health_bar(Level *lvl, SDL_Renderer *renderer) {
 	SDL_Rect background_rect = get_health_bar_background_rect();
 	SDL_RenderFillRect(renderer, &background_rect);
 
-	float ratio = (float) character.current_hp / character.max_hp;
-	SDL_SetRenderDrawColor(renderer, (char) (0xFF * (1 - ratio)), (char) (0xFF * ratio), 0, SDL_ALPHA_OPAQUE);
-	SDL_Rect indicator_rect = get_health_bar_indicator_rect(ratio);
+	float hp_percentage = (float) character.current_hp / character.max_hp;
+	SDL_SetRenderDrawColor(renderer, 0x00,  0xFF, 0, SDL_ALPHA_OPAQUE);
+	SDL_Rect indicator_rect = get_health_bar_indicator_rect(hp_percentage);
 	SDL_RenderFillRect(renderer, &indicator_rect);
 }
 
