@@ -1,4 +1,5 @@
 #include <stdbool.h>
+
 #include "camera.h"
 #include "character.h"
 #include "environment.h"

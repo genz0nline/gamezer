@@ -1,12 +1,6 @@
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
 #include <stdbool.h>
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_surface.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_timer.h>
-#include <stdio.h>
+
 #include "character.h"
 #include "camera.h"
 #include "environment.h"
@@ -44,6 +38,9 @@ void spawn_character(Level *lvl) {
 	character.melee_attack_cooldown_ms = 300;
 	character.melee_attack_time_ms = 100;
 	character.melee_attack_range_m = 2;
+	character.melee_attack_damage = 5;
+
+	character.dead = false;
 }
 
 SDL_Rect get_character_rect(void) {
@@ -70,7 +67,6 @@ SDL_Rect get_melee_weapon_rect(void) {
 SDL_Rect get_health_bar_border_rect(void) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
-	// TODO: Get rid of magic numbers
 	w_m = character.w_m * 1.4; 
 	h_m = .3;
 	x_m = character.x_m - .2 *  character.w_m;
@@ -85,7 +81,6 @@ SDL_Rect get_health_bar_border_rect(void) {
 SDL_Rect get_health_bar_background_rect(void) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
-	// TODO: Get rid of magic numbers
 	w_m = character.w_m * 1.35; 
 	h_m = .25;
 	x_m = character.x_m - .175 *  character.w_m;
@@ -99,7 +94,6 @@ SDL_Rect get_health_bar_background_rect(void) {
 SDL_Rect get_health_bar_indicator_rect(float hp_percentage) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
-	// TODO: Get rid of magic numbers
 	w_m = character.w_m * 1.35 * hp_percentage; 
 	h_m = .25;
 	x_m = character.x_m - .175 *  character.w_m;
@@ -111,6 +105,9 @@ SDL_Rect get_health_bar_indicator_rect(float hp_percentage) {
 }
 
 void update_character_state(Level *lvl) {
+	if (character.dead)
+		return;
+
 	Uint32 tick = SDL_GetTicks();
 	int milliseconds_passed = tick - character.last_update_tick;
 	if (milliseconds_passed >= UPDATE_TICK_RATE) {
@@ -177,19 +174,15 @@ void start_jump(void) {
 		return;
 
 	if (!character.jumped) {
-		printf("Jump!\n");
 		character.jumped = true;
 		character.jumping = true;
 		character.jump_start = SDL_GetTicks();
 		character.y_speed_m = 0;
 	} else if (!character.jumping && !character.jumped_twice) {
-		printf("Double jump!\n");
 		character.jumped_twice = true;
 		character.jumping = true;
 		character.jump_start = SDL_GetTicks();
 		character.y_speed_m = 0;
-	} else {
-		printf("No triple jump allowed!\n");
 	}
 }
 
@@ -223,6 +216,9 @@ void draw_weapon(Level *lvl, SDL_Renderer *renderer) {
 }
 
 void draw_character(Level *lvl, SDL_Renderer *renderer) {
+	if (character.dead)
+		return;
+
 	calculate_m_to_p_coefficients(lvl);
 
 	SDL_Rect rect = get_character_rect();
@@ -231,6 +227,10 @@ void draw_character(Level *lvl, SDL_Renderer *renderer) {
 
 	draw_weapon(lvl, renderer);
 	draw_health_bar(lvl, renderer);
+}
 
+void die(void) {
+	character.current_hp = 0;
+	character.dead = true;
 }
 

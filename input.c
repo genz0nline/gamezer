@@ -1,9 +1,8 @@
-#include <SDL2/SDL_keycode.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+
 #include "character.h"
 #include "camera.h"
-
 #include "input.h"
 
 bool left_pressed;
@@ -36,11 +35,9 @@ void handle_keydown(SDL_Keycode sym) {
 			break;
 		case SDLK_MINUS:
 			zoom_out();
-			printf("Camera capture window width and height = %f, %f\n", capture_window_width_m, capture_window_height_m);
 			break;
 		case SDLK_EQUALS:
 			zoom_in();
-			printf("Camera capture window width and height = %f, %f\n", capture_window_width_m, capture_window_height_m);
 			break;
 	}
 }

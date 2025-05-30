@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_keycode.h>
+#include <stdbool.h>
 
 extern const char *GAME_TITLE;
 extern int screen_width;

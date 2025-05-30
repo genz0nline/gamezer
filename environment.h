@@ -3,7 +3,8 @@
 
 #include <SDL2/SDL.h>
 
-#define MAX_MOBS	20
+#define MAX_MOBS							20
+#define INITIAL_PROJECTILES_CAPACITY		20
 
 typedef struct {
 	char R;
@@ -36,8 +37,29 @@ typedef struct {
 	float y_speed_m;
 
 	float attack_range_m;
+	float projectile_speed_m;
+	float projectile_travel_distance_m;
+	float projectile_width_m;
+	float projectile_height_m;
+	int projectile_damage;
+	Color projectile_color;
+	Uint32 last_fire_time;
+	int fire_cooldown_ms;
 
+	bool dead;
 } Mob;
+
+typedef struct {
+	float x_m, y_m;
+	float x_speed_m;
+	float w_m, h_m;
+	int damage;
+	float starting_point_x_m;
+	float travel_distance_m;
+	bool destroyed;
+	Uint32 last_update_tick;
+	Color color;
+} Projectile;
 
 typedef struct {
 	float width_m;
@@ -47,6 +69,9 @@ typedef struct {
 	Coordinate starting_point;
 	Mob *mobs;
 	int mobs_len;
+	Projectile *projectiles;
+	int projectiles_len;
+	int projectiles_capacity;
 } Level;
 
 Level *initialize_default_level(void);
