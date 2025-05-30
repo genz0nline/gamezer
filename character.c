@@ -27,6 +27,7 @@ const float JUMP_FORCE = 400;
 void spawn_character(Level *lvl) {
 	character.x_m = lvl->starting_point.x_m;
 	character.y_m = lvl->starting_point.y_m;
+	character.direction = 1;
 	character.max_hp = DEFAULT_MAX_HP;
 	character.current_hp = character.max_hp;
 	character.w_m = 1;
@@ -38,12 +39,73 @@ void spawn_character(Level *lvl) {
 	character.jumped = false;
 	character.jump_finished = SDL_GetTicks();
 	character.jump_start = character.jump_finished - 1;
+
+	character.melee_attack_start_time = 0;
+	character.melee_attack_cooldown_ms = 300;
+	character.melee_attack_time_ms = 100;
+	character.melee_attack_range_m = 1;
 }
 
 SDL_Rect get_character_rect(void) {
 	int x, y, w, h;
 	calculate_m_to_p_coordinates(character.x_m, character.y_m, &x, &y);
 	calculate_m_to_p_dimesions(character.w_m, character.h_m, &w, &h);
+	SDL_Rect block_rect = {x, y-h, w, h};
+	return block_rect;
+}
+
+SDL_Rect get_melee_weapon_rect(void) {
+	int x, y, w, h;
+	float x_m, y_m, w_m, h_m;
+	x_m = character.direction == 1 ? character.x_m + character.w_m : character.x_m - character.melee_attack_range_m;
+	y_m = character.y_m + character.h_m * .5;
+	w_m = character.melee_attack_range_m;
+	h_m = .3;
+	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
+	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
+	SDL_Rect block_rect = {x, y-h, w, h};
+	return block_rect;
+}
+
+SDL_Rect get_health_bar_border_rect(void) {
+	int x, y, w, h;
+	float x_m, y_m, w_m, h_m;
+	// TODO: Get rid of magic numbers
+	w_m = character.w_m * 1.4; 
+	h_m = .3;
+	x_m = character.x_m - .2 *  character.w_m;
+	y_m = character.y_m + character.h_m * 1.2;
+	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
+	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
+	SDL_Rect block_rect = {x, y-h, w, h};
+	return block_rect;
+}
+
+
+SDL_Rect get_health_bar_background_rect(void) {
+	int x, y, w, h;
+	float x_m, y_m, w_m, h_m;
+	// TODO: Get rid of magic numbers
+	w_m = character.w_m * 1.35; 
+	h_m = .25;
+	x_m = character.x_m - .175 *  character.w_m;
+	y_m = character.y_m + character.h_m * 1.2 + .025;
+	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
+	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
+	SDL_Rect block_rect = {x, y-h, w, h};
+	return block_rect;
+}
+
+SDL_Rect get_health_bar_indicator_rect(float ratio) {
+	int x, y, w, h;
+	float x_m, y_m, w_m, h_m;
+	// TODO: Get rid of magic numbers
+	w_m = character.w_m * 1.35 * ratio; 
+	h_m = .25;
+	x_m = character.x_m - .175 *  character.w_m;
+	y_m = character.y_m + character.h_m * 1.2 + .025;
+	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
+	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
 	SDL_Rect block_rect = {x, y-h, w, h};
 	return block_rect;
 }
@@ -55,9 +117,11 @@ void update_character_position(Level *lvl) {
 
 		if (right_pressed) {
 			character.x_m += (float) miliseconds_passed * character.x_speed_m  * .001;
+			character.direction = 1;
 		}
 		if (left_pressed) {
 			character.x_m -= (float) miliseconds_passed * character.x_speed_m * .001;
+			character.direction = -1;
 		}
 
 		if (character.jumping && tick - character.jump_start <= MAX_JUMP_FORCE_TIME_MS) {
@@ -101,6 +165,13 @@ void update_character_position(Level *lvl) {
 	}
 }
 
+void melee_attack(void) {
+	Uint32 tick = SDL_GetTicks();
+	if (tick - character.melee_attack_start_time >= character.melee_attack_cooldown_ms || character.melee_attack_start_time == 0) {
+		character.melee_attack_start_time = tick;
+	}
+}
+
 void start_jump(void) {
 	if (character.jump_finished < character.jump_start)
 		return;
@@ -127,11 +198,39 @@ void finish_jump(void) {
 	character.jump_finished = SDL_GetTicks();
 }
 
+void draw_health_bar(Level *lvl, SDL_Renderer *renderer) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_Rect border_rect = get_health_bar_border_rect();
+	SDL_RenderFillRect(renderer, &border_rect);
+
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+	SDL_Rect background_rect = get_health_bar_background_rect();
+	SDL_RenderFillRect(renderer, &background_rect);
+
+	float ratio = (float) character.current_hp / character.max_hp;
+	SDL_SetRenderDrawColor(renderer, (char) (0xFF * (1 - ratio)), (char) (0xFF * ratio), 0, SDL_ALPHA_OPAQUE);
+	SDL_Rect indicator_rect = get_health_bar_indicator_rect(ratio);
+	SDL_RenderFillRect(renderer, &indicator_rect);
+}
+
+void draw_weapon(Level *lvl, SDL_Renderer *renderer) {
+	Uint32 tick = SDL_GetTicks();
+	if (tick - character.melee_attack_start_time <= character.melee_attack_time_ms) {
+		SDL_SetRenderDrawColor(renderer, 0x5F, 0x5F, 0x7F, SDL_ALPHA_OPAQUE);
+		SDL_Rect rect = get_melee_weapon_rect();
+		SDL_RenderFillRect(renderer, &rect);
+	}
+}
+
 void draw_character(Level *lvl, SDL_Renderer *renderer) {
 	calculate_m_to_p_coefficients(lvl);
 
 	SDL_Rect rect = get_character_rect();
 	SDL_SetRenderDrawColor(renderer, character.color.R, character.color.G, character.color.B, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(renderer, &rect);
+
+	draw_weapon(lvl, renderer);
+	draw_health_bar(lvl, renderer);
+
 }
 

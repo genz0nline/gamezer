@@ -7,6 +7,13 @@
 typedef struct {
 	float x_m, y_m;
 	float w_m, h_m;
+	int direction; // 1 - looks right, -1 - looks left
+
+	Uint32 melee_attack_start_time;
+	int melee_attack_cooldown_ms;
+	int melee_attack_time_ms;
+	float melee_attack_range_m;
+
 	Color color;
 	int max_hp;
 	int current_hp;
@@ -27,5 +34,6 @@ void update_character_position(Level *lvl);
 void draw_character(Level *lvl, SDL_Renderer *renderer);
 void start_jump(void);
 void finish_jump(void);
+void melee_attack(void);
 
 #endif

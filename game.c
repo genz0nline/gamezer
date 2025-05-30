@@ -17,12 +17,6 @@ const char *GAME_TITLE = "Gamezer";
 int screen_width = 1920;
 int screen_height = 1080;
 
-enum GAME_STATE {
-	GAME_STATE_MAIN_MENU,
-	GAME_STATE_IN_PLAY,
-	GAME_STATE_PAUSED,
-};
-
 Game initialize_game(void) {
 	Game game = {
 		.window = NULL,

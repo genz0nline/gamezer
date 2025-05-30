@@ -7,7 +7,6 @@
 #include "environment.h"
 #include "camera.h"
 #include "character.h"
-#include "utils.h"
 
 const int DEFAULT_LEVEL_WIDTH_M = 40;
 const int DEFAULT_LEVEL_HEIGHT_M = 30;
@@ -35,19 +34,6 @@ Level *initialize_default_level(void) {
 	blocks[1].color = (Color){0, 0, 0xFF,};
 	lvl->blocks_len++;
 
-	// blocks[2].x_m = 350;
-	// blocks[2].y_m = 200;
-	// blocks[2].width_m = 200;
-	// blocks[2].height_m = 20;
-	// blocks[2].color = (Color){0, 0, 0xFF,};
-	// lvl->blocks_len++;
-
-	// blocks[3].x_m = 600;
-	// blocks[3].y_m = 100;
-	// blocks[3].width_m = 200;
-	// blocks[3].height_m = 20;
-	// blocks[3].color = (Color){0, 0, 0,};
-	// lvl->blocks_len++;
 
 	lvl->width_m = DEFAULT_LEVEL_WIDTH_M;
 	lvl->height_m = DEFAULT_LEVEL_HEIGHT_M;

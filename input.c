@@ -1,3 +1,4 @@
+#include <SDL2/SDL_keycode.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "character.h"
@@ -29,6 +30,9 @@ void handle_keydown(SDL_Keycode sym) {
 			break;
 		case SDLK_UP:
 			start_jump();
+			break;
+		case SDLK_a:
+			melee_attack();
 			break;
 		case SDLK_MINUS:
 			zoom_out();

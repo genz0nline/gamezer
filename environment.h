@@ -34,4 +34,5 @@ void free_level(Level *lvl);
 void draw_default_level(Level *lvl, SDL_Renderer *renderer);
 bool check_block_collision(Block *block, float *x_collision_m, float *y_collision_m);
 
+
 #endif
