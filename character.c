@@ -43,7 +43,7 @@ void spawn_character(Level *lvl) {
 	character.melee_attack_start_time = 0;
 	character.melee_attack_cooldown_ms = 300;
 	character.melee_attack_time_ms = 100;
-	character.melee_attack_range_m = 1;
+	character.melee_attack_range_m = 2;
 }
 
 SDL_Rect get_character_rect(void) {

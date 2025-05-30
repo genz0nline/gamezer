@@ -163,7 +163,7 @@ void update_mob_state(Level *lvl, Mob *mob) {
 		float distance = mob->x_m  + mob->w_m * .5 - character.x_m - character.w_m * .5;
 		if (ABS(distance) > mob->attack_range_m) {
 			mob->x_speed_m = distance < 0 ? mob->max_x_speed_m : -mob->max_x_speed_m;
-		} else {
+		} else if (ABS(distance) <= mob->attack_range_m * .9) {
 			mob->x_speed_m = 0;
 		}
 
