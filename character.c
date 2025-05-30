@@ -1,3 +1,5 @@
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_timer.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
@@ -39,6 +41,12 @@ void spawn_character(Level *lvl) {
 	character.melee_attack_time_ms = 100;
 	character.melee_attack_range_m = 2;
 	character.melee_attack_damage = 5;
+
+	character.dash_start_tick = 0;
+	character.dash_time_ms = 200;
+	character.dash_speed = 30;
+	character.dash_direction = 1;
+	character.dash_cooldown_ms = 400;
 
 	character.dead = false;
 }
@@ -112,13 +120,17 @@ void update_character_state(Level *lvl) {
 	int milliseconds_passed = tick - character.last_update_tick;
 	if (milliseconds_passed >= UPDATE_TICK_RATE) {
 
-		if (right_pressed) {
-			character.x_m += (float) milliseconds_passed * character.x_speed_m  * .001;
-			character.direction = 1;
-		}
-		if (left_pressed) {
-			character.x_m -= (float) milliseconds_passed * character.x_speed_m * .001;
-			character.direction = -1;
+		if (character.dash_start_tick != 0 && tick - character.dash_start_tick < character.dash_time_ms) {
+			character.x_m += character.dash_direction * (float) milliseconds_passed * character.dash_speed  * .001;
+		} else {
+			if (right_pressed) {
+				character.x_m += (float) milliseconds_passed * character.x_speed_m  * .001;
+				character.direction = 1;
+			}
+			if (left_pressed) {
+				character.x_m -= (float) milliseconds_passed * character.x_speed_m * .001;
+				character.direction = -1;
+			}
 		}
 
 		if (character.jumping && tick - character.jump_start <= MAX_JUMP_FORCE_TIME_MS) {
@@ -189,6 +201,14 @@ void start_jump(void) {
 void finish_jump(void) {
 	character.jumping = false;
 	character.jump_finished = SDL_GetTicks();
+}
+
+void dash(void) {
+	Uint32 tick = SDL_GetTicks();
+	if (character.dash_start_tick == 0 || tick - character.dash_start_tick > character.dash_cooldown_ms) {
+		character.dash_start_tick = tick;
+		character.dash_direction = character.direction;
+	}
 }
 
 void draw_health_bar(Level *lvl, SDL_Renderer *renderer) {

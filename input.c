@@ -4,6 +4,7 @@
 #include "character.h"
 #include "camera.h"
 #include "input.h"
+#include "game.h"
 
 bool left_pressed;
 bool right_pressed;
@@ -19,7 +20,7 @@ void initialize_input() {
 	down_pressed = false;
 }
 
-void handle_keydown(SDL_Keycode sym) {
+void handle_keydown(SDL_Keycode sym, Level **lvl) {
 	switch (sym) {
 		case SDLK_RIGHT:
 			right_pressed = true;
@@ -32,6 +33,12 @@ void handle_keydown(SDL_Keycode sym) {
 			break;
 		case SDLK_a:
 			melee_attack();
+			break;
+		case SDLK_s:
+			dash();
+			break;
+		case SDLK_r:
+			restart(lvl);
 			break;
 		case SDLK_MINUS:
 			zoom_out();

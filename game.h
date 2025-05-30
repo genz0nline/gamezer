@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
+#include "environment.h"
+
 extern const char *GAME_TITLE;
 extern int screen_width;
 extern int screen_height;
@@ -19,5 +21,6 @@ int start_game(void);
 
 Game initialize_game(void);
 bool game_cleanup(Game *game, int exit_code);
+void restart(Level **lvl);
 
 #endif

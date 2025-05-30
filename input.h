@@ -11,7 +11,7 @@ extern bool up_just_pressed;
 extern bool down_pressed;
 
 void initialize_input();
-void handle_keydown(SDL_Keycode sym);
+void handle_keydown(SDL_Keycode sym, Level **lvl);
 void handle_keyup(SDL_Keycode sym);
 
 #endif

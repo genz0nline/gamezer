@@ -65,6 +65,12 @@ void render_frame(Game *game, Level *lvl) {
 	SDL_RenderPresent(game->renderer);
 }
 
+void restart(Level **lvl) {
+	free_level(*lvl);
+	*lvl = initialize_default_level();
+	spawn_character(*lvl);
+}
+
 int start_game(void) {
 	Game game = initialize_game();
 	if(initialize_sdl(&game)) {
@@ -86,7 +92,7 @@ int start_game(void) {
 			free_level(lvl);
 			game_cleanup(&game, EXIT_SUCCESS);
 		} else if (e.type == SDL_KEYDOWN) {
-			handle_keydown(e.key.keysym.sym);
+			handle_keydown(e.key.keysym.sym, &lvl);
 		} else if (e.type == SDL_KEYUP) {
 			handle_keyup(e.key.keysym.sym);
 		}
