@@ -1,3 +1,4 @@
+#include <SDL2/SDL_keycode.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
@@ -77,7 +78,7 @@ void handle_main_menu_keydown(SDL_Keycode sym, Game *game) {
 				highlighted_option_index -= 1;
 			break;
 		case SDLK_RETURN:
-			choose_menu_option(game);
+			choose_main_menu_option(game);
 			break;
 	}
 }

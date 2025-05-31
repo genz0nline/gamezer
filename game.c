@@ -22,7 +22,6 @@ Game initialize_game(void) {
 		.game_state = MAIN_MENU,
 	};
 
-
 	return game;
 }
 
@@ -30,6 +29,7 @@ bool game_cleanup(Game *game, int exit_code) {
 	free_level(game->lvl);
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
+	TTF_Quit();
 	SDL_Quit();
 
 	printf("Game has ended!\n");
@@ -42,6 +42,11 @@ bool initialize_sdl(Game *game) {
 		return true;
 	}
 
+	if (TTF_Init()) {
+		fprintf(stderr, "TTF couldn't initialize, TTF_Error: %s\n", TTF_GetError());
+		return true;
+	}
+
 	game->window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_FULLSCREEN);
 	if (!game->window) {
 		fprintf(stderr, "SDL couldn't create window, SDL_ERROR: %s\n", SDL_GetError());
@@ -51,11 +56,6 @@ bool initialize_sdl(Game *game) {
 	game->renderer = SDL_CreateRenderer(game->window, -1, 0);
 	if (!game->renderer) {
 		fprintf(stderr, "SDL couldn't create renderer, SDL_ERROR: %s\n", SDL_GetError());
-		return true;
-	}
-
-	if (TTF_Init()) {
-		fprintf(stderr, "TTF couldn't initialize, TTF_Error: %s\n", TTF_GetError());
 		return true;
 	}
 

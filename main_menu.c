@@ -6,9 +6,9 @@
 #include "game.h"
 #include "input.h"
 
-#define MENU_OPTIONS_GAP		10
-#define MENU_RELATIVE_WIDHT		.4
-#define MENU_RELATIVE_HEIGHT	.6
+#define MAIN_MENU_OPTIONS_GAP			10
+#define MAIN_MENU_RELATIVE_WIDHT		.4
+#define MAIN_MENU_RELATIVE_HEIGHT		.6
 
 enum MAIN_MENU_OPTIONS {
 	START_GAME = 0,
@@ -32,7 +32,7 @@ int menu_x;
 int menu_y;
 
 SDL_Rect get_main_menu_option_rect(int index) {
-	int y = menu_y + index * (menu_option_height + MENU_OPTIONS_GAP);
+	int y = menu_y + index * (menu_option_height + MAIN_MENU_OPTIONS_GAP);
 	SDL_Rect rect = {menu_x, y, menu_width, menu_option_height};
 	return rect;
 }
@@ -93,9 +93,9 @@ void render_main_menu(Game *game) {
 	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(game->renderer);
 
-	menu_width = (int) (screen_width * MENU_RELATIVE_WIDHT); 
-	menu_height = (int) (screen_height * MENU_RELATIVE_HEIGHT); 
-	menu_option_height = (int) ((menu_height - (main_menu_options_len - 1) * MENU_OPTIONS_GAP) / main_menu_options_len);
+	menu_width = (int) (screen_width * MAIN_MENU_RELATIVE_WIDHT); 
+	menu_height = (int) (screen_height * MAIN_MENU_RELATIVE_HEIGHT); 
+	menu_option_height = (int) ((menu_height - (main_menu_options_len - 1) * MAIN_MENU_OPTIONS_GAP) / main_menu_options_len);
 	menu_x = (int) ((screen_width - menu_width) / 2);
 	menu_y = (int) ((screen_height - menu_height) / 2);
 
@@ -106,7 +106,7 @@ void render_main_menu(Game *game) {
 	SDL_RenderPresent(game->renderer);
 }
 
-void choose_menu_option(Game *game) {
+void choose_main_menu_option(Game *game) {
 	switch (highlighted_option_index) {
 		case START_GAME:
 			game->lvl = initialize_default_level();

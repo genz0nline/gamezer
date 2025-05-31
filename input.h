@@ -17,6 +17,5 @@ void initialize_input();
 void handle_in_play_keydown(SDL_Keycode sym, Game *game);
 void handle_in_play_keyup(SDL_Keycode sym);
 void handle_main_menu_keydown(SDL_Keycode sym, Game *game);
-void handle_main_menu_keyup(SDL_Keycode sym);
 
 #endif
