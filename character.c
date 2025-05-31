@@ -235,7 +235,7 @@ void draw_weapon(Level *lvl, SDL_Renderer *renderer) {
 	}
 }
 
-void draw_character(Level *lvl, SDL_Renderer *renderer) {
+void draw_character(SDL_Renderer *renderer, Level *lvl) {
 	if (character.dead)
 		return;
 

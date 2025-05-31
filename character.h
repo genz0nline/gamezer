@@ -40,7 +40,7 @@ extern Character character;
 
 void spawn_character(Level *lvl);
 void update_character_state(Level *lvl);
-void draw_character(Level *lvl, SDL_Renderer *renderer);
+void draw_character(SDL_Renderer *renderer, Level *lvl);
 SDL_Rect get_melee_weapon_rect(void);
 void start_jump(void);
 void finish_jump(void);

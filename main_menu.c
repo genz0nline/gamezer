@@ -1,0 +1,78 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <time.h>
+#include "main_menu.h"
+#include "camera.h"
+#include "character.h"
+#include "game.h"
+#include "input.h"
+
+#define MENU_OPTIONS_GAP		10
+#define MENU_RELATIVE_WIDHT		.4
+#define MENU_RELATIVE_HEIGHT	.6
+
+enum MAIN_MENU_OPTIONS {
+	START_GAME = 0,
+	SETTINGS = 1,
+	CREATORS = 2,
+	EXIT_GAME = 3,
+};
+
+int main_menu_options_len = 4;
+int highlighted_option_index = 0;
+
+int menu_width;
+int menu_height;
+int menu_option_height;
+int menu_x;
+int menu_y;
+
+SDL_Rect get_main_menu_option_rect(int index) {
+	int y = menu_y + index * (menu_option_height + MENU_OPTIONS_GAP);
+	SDL_Rect rect = {menu_x, y, menu_width, menu_option_height};
+	return rect;
+}
+
+void draw_main_menu_option(SDL_Renderer *renderer, int index) {
+	SDL_Rect rect = get_main_menu_option_rect(index);
+	if (index == highlighted_option_index)
+		SDL_SetRenderDrawColor(renderer, 0xFF, 0xDF, 0x00, SDL_ALPHA_OPAQUE);
+	else
+		SDL_SetRenderDrawColor(renderer, 0xD4, 0xAF, 0x37, SDL_ALPHA_OPAQUE);
+
+	SDL_RenderFillRect(renderer, &rect);
+}
+
+void render_main_menu(Game *game) {
+	SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(game->renderer);
+
+	menu_width = (int) (screen_width * MENU_RELATIVE_WIDHT); 
+	menu_height = (int) (screen_height * MENU_RELATIVE_HEIGHT); 
+	menu_option_height = (int) ((menu_height - (main_menu_options_len - 1) * MENU_OPTIONS_GAP) / main_menu_options_len);
+	menu_x = (int) ((screen_width - menu_width) / 2);
+	menu_y = (int) ((screen_height - menu_height) / 2);
+
+	for (int i = 0; i < main_menu_options_len; i++) {
+		draw_main_menu_option(game->renderer, i);
+	}
+
+	SDL_RenderPresent(game->renderer);
+}
+
+void choose_menu_option(Game *game) {
+	switch (highlighted_option_index) {
+		case START_GAME:
+			game->lvl = initialize_default_level();
+			spawn_character(game->lvl);
+			initialize_camera(game->lvl);
+			initialize_input();
+			game->game_state=IN_PLAY;
+			break;
+		case EXIT_GAME:
+			game_cleanup(game, EXIT_SUCCESS);
+	}
+}

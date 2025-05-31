@@ -75,9 +75,9 @@ typedef struct {
 } Level;
 
 Level *initialize_default_level(void);
-void update_level_state(Level *lvl);
+void update_environment_state(Level *lvl);
 void free_level(Level *lvl);
-void draw_default_level(Level *lvl, SDL_Renderer *renderer);
+void draw_default_level(SDL_Renderer *renderer, Level *lvl);
 bool check_block_collision(Block *block, float *x_collision_m, float *y_collision_m);
 
 

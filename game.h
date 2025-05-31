@@ -12,15 +12,24 @@ extern int screen_height;
 
 #define UPDATE_TICK_RATE	15
 
+enum GAME_STATE {
+	MAIN_MENU,
+	IN_PLAY,
+	PAUSED,
+	GAME_OVER,
+};
+
 typedef struct Game {
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+	Level *lvl;
+	int game_state;
 } Game;
 
-int start_game(void);
+int start_game();
 
 Game initialize_game(void);
 bool game_cleanup(Game *game, int exit_code);
-void restart(Level **lvl);
+void restart_game(Level **lvl);
 
 #endif

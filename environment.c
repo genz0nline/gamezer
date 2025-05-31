@@ -76,9 +76,18 @@ Level *initialize_default_level(void) {
 }
 
 void free_level(Level *lvl) {
-	free(lvl->blocks);
-	free(lvl->mobs);
-	free(lvl->projectiles);
+	if (lvl == NULL)
+		return;
+
+	if (lvl->blocks != NULL)
+		free(lvl->blocks);
+
+	if (lvl->mobs != NULL)
+		free(lvl->mobs);
+
+	if (lvl->projectiles != NULL)
+		free(lvl->projectiles);
+
 	free(lvl);
 }
 
@@ -312,7 +321,7 @@ void deal_damage(Level *lvl) {
 	}
 }
 
-void update_level_state(Level *lvl) {
+void update_environment_state(Level *lvl) {
 	int mobs_len = lvl->mobs_len;
 	for (Mob *mob = lvl->mobs; --mobs_len >= 0; mob++) {
 		update_mob_state(lvl, mob);
@@ -360,7 +369,7 @@ void draw_projectile(SDL_Renderer *renderer, Projectile *projectile) {
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void draw_default_level(Level *lvl, SDL_Renderer *renderer) {
+void draw_default_level(SDL_Renderer *renderer, Level *lvl) {
 
 	calculate_m_to_p_coefficients(lvl);
 
