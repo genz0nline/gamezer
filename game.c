@@ -1,4 +1,3 @@
-#include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>

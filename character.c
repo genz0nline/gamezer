@@ -1,5 +1,3 @@
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_timer.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
@@ -187,6 +185,8 @@ void start_jump(void) {
 
 	if (!character.jumped) {
 		character.jumped = true;
+		if (character.y_speed_m != 0)
+			character.jumped_twice = true;
 		character.jumping = true;
 		character.jump_start = SDL_GetTicks();
 		character.y_speed_m = 0;

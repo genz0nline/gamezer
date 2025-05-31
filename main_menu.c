@@ -1,9 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_surface.h>
-#include <time.h>
 #include "main_menu.h"
 #include "camera.h"
 #include "character.h"
