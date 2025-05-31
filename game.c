@@ -1,3 +1,4 @@
+#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
@@ -50,6 +51,11 @@ bool initialize_sdl(Game *game) {
 	game->renderer = SDL_CreateRenderer(game->window, -1, 0);
 	if (!game->renderer) {
 		fprintf(stderr, "SDL couldn't create renderer, SDL_ERROR: %s\n", SDL_GetError());
+		return true;
+	}
+
+	if (TTF_Init()) {
+		fprintf(stderr, "TTF couldn't initialize, TTF_Error: %s\n", TTF_GetError());
 		return true;
 	}
 
