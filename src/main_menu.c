@@ -64,7 +64,7 @@ void draw_main_menu_option(SDL_Renderer *renderer, int index) {
 
 	SDL_Color color = {0, 0, 0};
 
-	TTF_Font *font = TTF_OpenFont("static/fonts/Montserrat-SemiBold.ttf", 65);
+	TTF_Font *font = TTF_OpenFont("src/static/fonts/Montserrat-SemiBold.ttf", 65);
 
 	if (font == NULL) {
 		printf("%s\n", TTF_GetError());

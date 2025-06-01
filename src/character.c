@@ -115,7 +115,6 @@ SDL_Rect get_health_bar_indicator_rect(float hp_percentage) {
 void update_character_speed(Level *lvl, Uint32 tick, int milliseconds_passed) {
 		// x-axis speed
 		if (character.dash_start_tick != 0 && tick - character.dash_start_tick < character.dash_time_ms) {
-			printf("character.dash_direction = %d\n", character.dash_direction);
 			character.unit.x_speed_m = character.dash_direction * character.dash_speed_m;
 		} else {
 			if (right_pressed) {
