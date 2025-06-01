@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -g `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs` -lSDL2_ttf
 
-SRC = main.c game.c environment.c camera.c character.c input.c main_menu.c
+SRC = main.c game.c environment.c camera.c character.c input.c main_menu.c unit_func.c
 OBJ = $(SRC:.c=.o)
 
 TARGET = gamezer

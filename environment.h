@@ -2,15 +2,12 @@
 #define ENVIRONMENT_H
 
 #include <SDL2/SDL.h>
+#include "color.h"
+#include "unit.h"
 
 #define MAX_MOBS							20
 #define INITIAL_PROJECTILES_CAPACITY		20
 
-typedef struct {
-	char R;
-	char G;
-	char B;
-} Color;
 
 typedef struct {
 	float x_m;
@@ -25,16 +22,7 @@ typedef struct {
 } Coordinate;
 
 typedef struct {
-	float x_m, y_m;
-	float w_m, h_m;
-	int direction;
-	Color color;
-	int max_hp;
-	int current_hp;
-	Uint32 last_update_tick;
-	float x_speed_m;
-	float max_x_speed_m;
-	float y_speed_m;
+	Unit unit;
 
 	float attack_range_m;
 	float projectile_speed_m;
@@ -45,8 +33,6 @@ typedef struct {
 	Color projectile_color;
 	Uint32 last_fire_time;
 	int fire_cooldown_ms;
-
-	bool dead;
 } Mob;
 
 typedef struct {
@@ -78,7 +64,7 @@ Level *initialize_default_level(void);
 void update_environment_state(Level *lvl);
 void free_level(Level *lvl);
 void draw_default_level(SDL_Renderer *renderer, Level *lvl);
-bool check_block_collision(Block *block, float *x_collision_m, float *y_collision_m);
+bool check_block_collision(Unit *unit, Block *block, float *x_collision_m, float *y_collision_m);
 
 
 #endif

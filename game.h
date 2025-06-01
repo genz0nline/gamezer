@@ -11,6 +11,7 @@ extern int screen_width;
 extern int screen_height;
 
 #define UPDATE_TICK_RATE	15
+#define GRAVITY_FORCE		98
 
 enum GAME_STATE {
 	MAIN_MENU,

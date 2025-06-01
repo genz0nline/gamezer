@@ -1,25 +1,17 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "unit.h"
 #include "environment.h"
 
 typedef struct {
-	float x_m, y_m;
-	float w_m, h_m;
-	int direction; // 1 - looks right, -1 - looks left
+	Unit unit;
 
 	Uint32 melee_attack_start_time;
 	int melee_attack_damage;
 	int melee_attack_cooldown_ms;
 	int melee_attack_time_ms;
 	float melee_attack_range_m;
-
-	Color color;
-	int max_hp;
-	int current_hp;
-	Uint32 last_update_tick;
-	float x_speed_m;
-	float y_speed_m;
 
 	bool jumped;
 	bool jumped_twice;
@@ -29,11 +21,9 @@ typedef struct {
 
 	Uint32 dash_start_tick;
 	int dash_time_ms;
-	Uint32 dash_speed;
+	float dash_speed_m;
 	int dash_direction;
 	int dash_cooldown_ms;
-
-	bool dead;
 } Character;
 
 extern Character character;

@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "utils.h"
 #include "character.h"
+#include "unit_func.h"
 
 const int DEFAULT_LEVEL_WIDTH_M = 40;
 const int DEFAULT_LEVEL_HEIGHT_M = 30;
@@ -36,18 +37,18 @@ Level *initialize_default_level(void) {
 	Mob *mobs = (Mob *)malloc(MAX_MOBS * sizeof(Mob));
 	lvl->mobs_len = 0;
 
-	mobs[0].x_m = 30;
-	mobs[0].y_m = 2;
-	mobs[0].color = (Color) {0xFF, 0, 0xFF,};
-	mobs[0].h_m = 2;
-	mobs[0].w_m = 1;
-	mobs[0].max_hp = 200;
-	mobs[0].current_hp = 200;
-	mobs[0].direction = -1;
-	mobs[0].x_speed_m = 0;
-	mobs[0].max_x_speed_m = 7;
-	mobs[0].y_speed_m = 0;
-	mobs[0].last_update_tick = SDL_GetTicks();
+	mobs[0].unit.x_m = 21;
+	mobs[0].unit.y_m = 13;
+	mobs[0].unit.color = (Color) {0xFF, 0, 0xFF,};
+	mobs[0].unit.h_m = 2;
+	mobs[0].unit.w_m = 1;
+	mobs[0].unit.max_hp = 200;
+	mobs[0].unit.current_hp = 200;
+	mobs[0].unit.direction = -1;
+	mobs[0].unit.x_speed_m = 0;
+	mobs[0].unit.max_x_speed_m = 7;
+	mobs[0].unit.y_speed_m = 0;
+	mobs[0].unit.last_update_tick = SDL_GetTicks();
 	mobs[0].attack_range_m = 7;
 	mobs[0].projectile_speed_m = 15;
 	mobs[0].projectile_damage = 23;
@@ -55,7 +56,7 @@ Level *initialize_default_level(void) {
 	mobs[0].projectile_color = (Color) {0xFF, 0x20, 0x20};
 	mobs[0].last_fire_time = 0;
 	mobs[0].fire_cooldown_ms = 1000;
-	mobs[0].dead = false;
+	mobs[0].unit.dead = false;
 	lvl->mobs_len++;
 
 	Projectile *projectiles = (Projectile *)malloc(INITIAL_PROJECTILES_CAPACITY * sizeof(Projectile));
@@ -67,7 +68,7 @@ Level *initialize_default_level(void) {
 	lvl->mobs = mobs;
 	lvl->projectiles = projectiles;
 	lvl->projectiles_capacity = INITIAL_PROJECTILES_CAPACITY;
-	lvl->starting_point.x_m = 1;
+	lvl->starting_point.x_m = 20;
 	lvl->starting_point.y_m = DEFAULT_BLOCK_HEIGHT_M;
 
 	initialize_camera(lvl);
@@ -101,8 +102,8 @@ SDL_Rect get_block_rect(Block *block) {
 
 SDL_Rect get_mob_rect(Mob *mob) {
 	int x, y, w, h;
-	calculate_m_to_p_coordinates(mob->x_m, mob->y_m, &x, &y);
-	calculate_m_to_p_dimesions(mob->w_m, mob->h_m, &w, &h);
+	calculate_m_to_p_coordinates(mob->unit.x_m, mob->unit.y_m, &x, &y);
+	calculate_m_to_p_dimesions(mob->unit.w_m, mob->unit.h_m, &w, &h);
 	SDL_Rect rect = {x, y-h, w, h};
 	return rect;
 }
@@ -115,27 +116,27 @@ SDL_Rect get_projectile_rect(Projectile *projectile) {
 	return rect;
 }
 
-bool check_block_collision(Block *block, float *x_collision_m, float *y_collision_m) {
-	if (character.x_m + character.w_m < block->x_m)
+bool check_block_collision(Unit *unit, Block *block, float *x_collision_m, float *y_collision_m) {
+	if (unit->x_m + unit->w_m < block->x_m)
 		return false;
-	if (character.x_m > block->x_m + block->width_m)
+	if (unit->x_m > block->x_m + block->width_m)
 		return false;
-	if (character.y_m + character.h_m < block->y_m)
+	if (unit->y_m + unit->h_m < block->y_m)
 		return false;
-	if (character.y_m > block->y_m + block->height_m)
+	if (unit->y_m > block->y_m + block->height_m)
 		return false;
 
-	// In case of collision we have to push character back a little bit
-	if ((2 * character.x_m + character.w_m) <= (2 * block->x_m + block->width_m)) {
-		*x_collision_m = block->x_m - character.x_m - character.w_m;
+	// In case of collision we have to push unit->back a little bit
+	if ((2 * unit->x_m + unit->w_m) <= (2 * block->x_m + block->width_m)) {
+		*x_collision_m = block->x_m - unit->x_m - unit->w_m;
 	} else {
-		*x_collision_m = block->x_m + block->width_m - character.x_m;
+		*x_collision_m = block->x_m + block->width_m - unit->x_m;
 	}
 
-	if ((2 * character.y_m + character.h_m) <= (2 * block->y_m + block->height_m)) {
-		*y_collision_m = block->y_m - character.y_m - character.h_m;
+	if ((2 * unit->y_m + unit->h_m) <= (2 * block->y_m + block->height_m)) {
+		*y_collision_m = block->y_m - unit->y_m - unit->h_m;
 	} else {
-		*y_collision_m = block->y_m + block->height_m - character.y_m;
+		*y_collision_m = block->y_m + block->height_m - unit->y_m;
 	}
 
 	return true;
@@ -144,10 +145,10 @@ bool check_block_collision(Block *block, float *x_collision_m, float *y_collisio
 SDL_Rect get_mob_health_bar_border_rect(Mob *mob) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
-	w_m = mob->w_m * 1.4; 
+	w_m = mob->unit.w_m * 1.4; 
 	h_m = .3;
-	x_m = mob->x_m - .2 *  mob->w_m;
-	y_m = mob->y_m + mob->h_m * 1.2;
+	x_m = mob->unit.x_m - .2 *  mob->unit.w_m;
+	y_m = mob->unit.y_m + mob->unit.h_m * 1.2;
 	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
 	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
 	SDL_Rect block_rect = {x, y-h, w, h};
@@ -157,10 +158,10 @@ SDL_Rect get_mob_health_bar_border_rect(Mob *mob) {
 SDL_Rect get_mob_health_bar_background_rect(Mob *mob) {
 	int x, y, w, h;
 	float x_m, y_m, w_m, h_m;
-	w_m = mob->w_m * 1.35; 
+	w_m = mob->unit.w_m * 1.35; 
 	h_m = .25;
-	x_m = mob->x_m - .175 *  mob->w_m;
-	y_m = mob->y_m + mob->h_m * 1.2 + .025;
+	x_m = mob->unit.x_m - .175 *  mob->unit.w_m;
+	y_m = mob->unit.y_m + mob->unit.h_m * 1.2 + .025;
 	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
 	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
 	SDL_Rect block_rect = {x, y-h, w, h};
@@ -169,12 +170,12 @@ SDL_Rect get_mob_health_bar_background_rect(Mob *mob) {
 
 SDL_Rect get_mob_health_bar_indicator_rect(Mob *mob) {
 	int x, y, w, h;
-	float hp_percentage = (float) mob->current_hp / mob->max_hp;
+	float hp_percentage = (float) mob->unit.current_hp / mob->unit.max_hp;
 	float x_m, y_m, w_m, h_m;
-	w_m = mob->w_m * 1.35 * hp_percentage; 
+	w_m = mob->unit.w_m * 1.35 * hp_percentage; 
 	h_m = .25;
-	x_m = mob->x_m - .175 *  mob->w_m;
-	y_m = mob->y_m + mob->h_m * 1.2 + .025;
+	x_m = mob->unit.x_m - .175 *  mob->unit.w_m;
+	y_m = mob->unit.y_m + mob->unit.h_m * 1.2 + .025;
 	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
 	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
 	SDL_Rect block_rect = {x, y-h, w, h};
@@ -190,19 +191,19 @@ void add_projectile(Level *lvl, Projectile projectile) {
 }
 
 void fire_range_attack(Level *lvl, Mob *mob) {
-	if (character.dead)
+	if (character.unit.dead)
 		return;
 
 	float w_m = .2;
 	float h_m = .2;
-	float x_m = mob->direction == 1 ? mob->x_m + mob->w_m : mob->x_m - w_m;
+	float x_m = mob->unit.direction == 1 ? mob->unit.x_m + mob->unit.w_m : mob->unit.x_m - w_m;
 	Projectile projectile = {
 		.w_m = w_m,
 		.h_m = h_m,
 		.x_m = x_m,
-		.y_m = mob->y_m + mob->h_m * .6,
+		.y_m = mob->unit.y_m + mob->unit.h_m * .6,
 		.damage = mob->projectile_damage,
-		.x_speed_m = mob->direction == 1 ? mob->projectile_speed_m : -mob->projectile_speed_m,
+		.x_speed_m = mob->unit.direction == 1 ? mob->projectile_speed_m : -mob->projectile_speed_m,
 		.starting_point_x_m = x_m,
 		.destroyed = false,
 		.color = mob->projectile_color,
@@ -213,45 +214,46 @@ void fire_range_attack(Level *lvl, Mob *mob) {
 	add_projectile(lvl, projectile);
 }
 
+void update_mob_speed(Mob *mob, int milliseconds_passed) {
+	float distance = mob->unit.x_m  + mob->unit.w_m * .5 - character.unit.x_m - character.unit.w_m * .5;
+	mob->unit.direction = distance < 0 ? 1 : -1;
+	if (ABS(distance) > mob->attack_range_m) {
+		mob->unit.x_speed_m = distance < 0 ? mob->unit.max_x_speed_m : -mob->unit.max_x_speed_m;
+	} else if (ABS(distance) <= mob->attack_range_m * .85) {
+		mob->unit.x_speed_m = 0;
+	}
+
+	mob->unit.y_speed_m -= GRAVITY_FORCE * milliseconds_passed * .001;
+}
+
 void update_mob_state(Level *lvl, Mob *mob) {
-	if (mob->dead)
+	if (mob->unit.dead)
 		return;
 	Uint32 tick = SDL_GetTicks();
-	int milliseconds_passed = tick - mob->last_update_tick;
+	int milliseconds_passed = tick - mob->unit.last_update_tick;
 	if (milliseconds_passed > UPDATE_TICK_RATE) {
-		float distance = mob->x_m  + mob->w_m * .5 - character.x_m - character.w_m * .5;
-		mob->direction = distance < 0 ? 1 : -1;
-		if (ABS(distance) > mob->attack_range_m) {
-			mob->x_speed_m = distance < 0 ? mob->max_x_speed_m : -mob->max_x_speed_m;
-		} else if (ABS(distance) <= mob->attack_range_m * .85) {
-			mob->x_speed_m = 0;
-		}
+		update_mob_speed(mob, milliseconds_passed);
 
-
-		if (mob->x_speed_m == 0 && (mob->last_fire_time == 0 || (tick - mob->last_fire_time >= mob->fire_cooldown_ms))) {
+		if (mob->unit.x_speed_m == 0 && (mob->last_fire_time == 0 || (tick - mob->last_fire_time >= mob->fire_cooldown_ms))) {
 			fire_range_attack(lvl, mob);
 			mob->last_fire_time = tick;
 		}
 
-		mob->x_m += mob->x_speed_m * milliseconds_passed * .001;
+		update_unit_position(lvl, &mob->unit, milliseconds_passed);
+		check_unit_collision(lvl, &mob->unit, NULL);
 
-		mob->x_m = MIN(mob->x_m, lvl->width_m - mob->w_m);
-		mob->x_m = MAX(mob->x_m, 0);
-		mob->y_m = MIN(mob->y_m, lvl->height_m - mob->h_m);
-		mob->y_m = MAX(mob->y_m, 0);
-
-		mob->last_update_tick = tick;
+		mob->unit.last_update_tick = tick;
 	}
 }
 
 bool check_projectile_hit_character(Projectile *projectile) {
-	if (projectile->x_m > character.x_m + character.w_m)
+	if (projectile->x_m > character.unit.x_m + character.unit.w_m)
 		return false;
-	if (projectile->x_m + projectile->w_m < character.x_m)
+	if (projectile->x_m + projectile->w_m < character.unit.x_m)
 		return false;
-	if (projectile->y_m > character.y_m + character.h_m)
+	if (projectile->y_m > character.unit.y_m + character.unit.h_m)
 		return false;
-	if (projectile->y_m + projectile->h_m <  character.y_m)
+	if (projectile->y_m + projectile->h_m <  character.unit.y_m)
 		return false;
 
 	return true;
@@ -275,8 +277,8 @@ void update_projectile_state(Level *lvl, Projectile *projectile) {
 
 		if (check_projectile_hit_character(projectile)) {
 			projectile->destroyed = true;
-			character.current_hp -= projectile->damage;
-			if (character.current_hp <= 0) {
+			character.unit.current_hp -= projectile->damage;
+			if (character.unit.current_hp <= 0) {
 				die();
 			}
 		}
@@ -313,9 +315,9 @@ void deal_damage(Level *lvl) {
 		int mobs_len = lvl->mobs_len;
 		for (Mob *mob = lvl->mobs; --mobs_len >= 0; mob++) {
 			if (attack_hits(mob)) {
-				mob->current_hp -= character.melee_attack_damage;
-				if (mob -> current_hp <= 0)
-					mob->dead = true;
+				mob->unit.current_hp -= character.melee_attack_damage;
+				if (mob->unit.current_hp <= 0)
+					mob->unit.dead = true;
 			}
 		}
 	}
@@ -351,10 +353,10 @@ void draw_mob_health_bar(SDL_Renderer *renderer, Mob *mob) {
 
 
 void draw_mob(SDL_Renderer *renderer, Mob *mob) {
-	if (mob->dead)
+	if (mob->unit.dead)
 		return;
 	SDL_Rect rect = get_mob_rect(mob);
-	SDL_SetRenderDrawColor(renderer, mob->color.R, mob->color.G, mob->color.B, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(renderer, mob->unit.color.R, mob->unit.color.G, mob->unit.color.B, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(renderer, &rect);
 
 	draw_mob_health_bar(renderer, mob);
