@@ -227,6 +227,10 @@ void update_mob_speed(Mob *mob, int milliseconds_passed) {
 }
 
 void update_mob_state(Level *lvl, Mob *mob) {
+	if (mob->unit.current_hp <= 0) {
+		mob->unit.dead = true;
+	}
+
 	if (mob->unit.dead)
 		return;
 	Uint32 tick = SDL_GetTicks();
@@ -292,37 +296,6 @@ void update_projectile_state(Level *lvl, Projectile *projectile) {
 	}
 }
 
-bool attack_hits(Mob *mob) {
-	SDL_Rect weapon_rect = get_melee_weapon_rect();
-	SDL_Rect mob_rect = get_mob_rect(mob);
-
-	if (weapon_rect.x > mob_rect.x + mob_rect.w)
-		return false;
-	if (mob_rect.x > weapon_rect.x + weapon_rect.w)
-		return false;
-	if (weapon_rect.y > mob_rect.y + mob_rect.h)
-		return false;
-	if (mob_rect.y > weapon_rect.y + weapon_rect.h)
-		return false;
-
-	return true;
-}
-
-void deal_damage(Level *lvl) {
-	Uint32 tick = SDL_GetTicks();
-
-	if (tick - character.melee_attack_start_time <= character.melee_attack_time_ms) {
-		int mobs_len = lvl->mobs_len;
-		for (Mob *mob = lvl->mobs; --mobs_len >= 0; mob++) {
-			if (attack_hits(mob)) {
-				mob->unit.current_hp -= character.melee_attack_damage;
-				if (mob->unit.current_hp <= 0)
-					mob->unit.dead = true;
-			}
-		}
-	}
-}
-
 void update_environment_state(Level *lvl) {
 	int mobs_len = lvl->mobs_len;
 	for (Mob *mob = lvl->mobs; --mobs_len >= 0; mob++) {
@@ -333,8 +306,6 @@ void update_environment_state(Level *lvl) {
 	for (Projectile *projectile = lvl->projectiles; --projectil_len >= 0; projectile++) {
 		update_projectile_state(lvl, projectile);
 	}
-
-	deal_damage(lvl);
 }
 
 void draw_mob_health_bar(SDL_Renderer *renderer, Mob *mob) {

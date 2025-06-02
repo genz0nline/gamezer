@@ -4,11 +4,12 @@
 
 #include "character.h"
 #include "camera.h"
+#include "classes.h"
 #include "environment.h"
 #include "game.h"
 #include "input.h"
-#include "utils.h"
 #include "unit_func.h"
+#include "skills.h"
 
 const int DEFAULT_MAX_HP = 100;
 const int DEFAULT_SPEED = 10;
@@ -18,8 +19,7 @@ Character character;
 const int MAX_JUMP_FORCE_TIME_MS = 100;
 const float JUMP_FORCE = 400;
 
-
-void spawn_character(Level *lvl) {
+void spawn_character(Level *lvl, Character_Class character_class) {
 	character.unit.x_m = lvl->starting_point.x_m;
 	character.unit.y_m = lvl->starting_point.y_m;
 	character.unit.direction = 1;
@@ -36,12 +36,6 @@ void spawn_character(Level *lvl) {
 	character.jump_finished = SDL_GetTicks();
 	character.jump_start = character.jump_finished - 1;
 
-	character.melee_attack_start_time = 0;
-	character.melee_attack_cooldown_ms = 300;
-	character.melee_attack_time_ms = 100;
-	character.melee_attack_range_m = 2;
-	character.melee_attack_damage = 5;
-
 	character.dash_start_tick = 0;
 	character.dash_time_ms = 200;
 	character.dash_speed_m = 30;
@@ -49,25 +43,22 @@ void spawn_character(Level *lvl) {
 	character.dash_cooldown_ms = 400;
 
 	character.unit.dead = false;
+
+	character.character_class = character_class;
+
+	switch (character_class) {
+		case WARRIOR:
+			character.skills = initialize_warrior_skills();
+			break;
+		default:
+			break;
+	}
 }
 
 SDL_Rect get_character_rect(void) {
 	int x, y, w, h;
 	calculate_m_to_p_coordinates(character.unit.x_m, character.unit.y_m, &x, &y);
 	calculate_m_to_p_dimesions(character.unit.w_m, character.unit.h_m, &w, &h);
-	SDL_Rect block_rect = {x, y-h, w, h};
-	return block_rect;
-}
-
-SDL_Rect get_melee_weapon_rect(void) {
-	int x, y, w, h;
-	float x_m, y_m, w_m, h_m;
-	x_m = character.unit.direction == 1 ? character.unit.x_m + character.unit.w_m : character.unit.x_m - character.melee_attack_range_m;
-	y_m = character.unit.y_m + character.unit.h_m * .5;
-	w_m = character.melee_attack_range_m;
-	h_m = .3;
-	calculate_m_to_p_coordinates(x_m, y_m, &x, &y);
-	calculate_m_to_p_dimesions(w_m, h_m, &w, &h);
 	SDL_Rect block_rect = {x, y-h, w, h};
 	return block_rect;
 }
@@ -145,6 +136,10 @@ void check_character_collision(Level *lvl) {
 }
 
 void update_character_state(Level *lvl) {
+	if (character.unit.current_hp <= 0) {
+		character.unit.dead = true;
+	}
+
 	if (character.unit.dead)
 		return;
 
@@ -163,13 +158,6 @@ void update_character_state(Level *lvl) {
 		check_character_collision(lvl);
 
 		character.unit.last_update_tick = tick;
-	}
-}
-
-void melee_attack(void) {
-	Uint32 tick = SDL_GetTicks();
-	if (tick - character.melee_attack_start_time >= character.melee_attack_cooldown_ms || character.melee_attack_start_time == 0) {
-		character.melee_attack_start_time = tick;
 	}
 }
 
@@ -220,15 +208,6 @@ void draw_health_bar(Level *lvl, SDL_Renderer *renderer) {
 	SDL_RenderFillRect(renderer, &indicator_rect);
 }
 
-void draw_weapon(Level *lvl, SDL_Renderer *renderer) {
-	Uint32 tick = SDL_GetTicks();
-	if (tick - character.melee_attack_start_time <= character.melee_attack_time_ms) {
-		SDL_SetRenderDrawColor(renderer, 0x5F, 0x5F, 0x7F, SDL_ALPHA_OPAQUE);
-		SDL_Rect rect = get_melee_weapon_rect();
-		SDL_RenderFillRect(renderer, &rect);
-	}
-}
-
 void draw_character(SDL_Renderer *renderer, Level *lvl) {
 	if (character.unit.dead)
 		return;
@@ -239,7 +218,6 @@ void draw_character(SDL_Renderer *renderer, Level *lvl) {
 	SDL_SetRenderDrawColor(renderer, character.unit.color.R, character.unit.color.G, character.unit.color.B, SDL_ALPHA_OPAQUE);
 	SDL_RenderFillRect(renderer, &rect);
 
-	draw_weapon(lvl, renderer);
 	draw_health_bar(lvl, renderer);
 }
 

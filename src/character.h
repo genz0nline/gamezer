@@ -3,15 +3,14 @@
 
 #include "unit.h"
 #include "environment.h"
+#include "skills.h"
+#include "classes.h"
 
 typedef struct {
 	Unit unit;
 
-	Uint32 melee_attack_start_time;
-	int melee_attack_damage;
-	int melee_attack_cooldown_ms;
-	int melee_attack_time_ms;
-	float melee_attack_range_m;
+	Character_Class character_class;
+	Skill *skills;
 
 	bool jumped;
 	bool jumped_twice;
@@ -28,14 +27,12 @@ typedef struct {
 
 extern Character character;
 
-void spawn_character(Level *lvl);
+void spawn_character(Level *lvl, Character_Class character_class);
 void update_character_state(Level *lvl);
 void draw_character(SDL_Renderer *renderer, Level *lvl);
-SDL_Rect get_melee_weapon_rect(void);
 void start_jump(void);
 void finish_jump(void);
 void dash(void);
-void melee_attack(void);
 void die(void);
 
 #endif

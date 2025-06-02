@@ -33,11 +33,11 @@ void handle_in_play_keydown(SDL_Keycode sym, Game *game) {
 		case SDLK_UP:
 			start_jump();
 			break;
-		case SDLK_a:
-			melee_attack();
-			break;
 		case SDLK_s:
 			dash();
+			break;
+		case SDLK_1:
+			use_skill_on_mob(0, game->lvl->mobs);
 			break;
 		case SDLK_ESCAPE:
 			game->game_state=MAIN_MENU;

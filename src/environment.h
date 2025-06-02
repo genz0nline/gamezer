@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "color.h"
 #include "unit.h"
+#include "utils.h"
 
 #define MAX_MOBS							20
 #define INITIAL_PROJECTILES_CAPACITY		20
@@ -16,10 +17,6 @@ typedef struct {
 	float height_m;
 	Color color;
 } Block;
-
-typedef struct {
-	float x_m, y_m;
-} Coordinate;
 
 typedef struct {
 	Unit unit;

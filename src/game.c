@@ -1,18 +1,20 @@
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
 #include "game.h"
 #include "character.h"
+#include "classes.h"
 #include "environment.h"
 #include "camera.h"
 #include "input.h"
 #include "main_menu.h"
 
 const char *GAME_TITLE = "Gamezer";
-int screen_width = 1920;
-int screen_height = 1080;
+int screen_width = 1200;
+int screen_height = 900;
 
 Game initialize_game(void) {
 	Game game = {
@@ -47,7 +49,7 @@ bool initialize_sdl(Game *game) {
 		return true;
 	}
 
-	game->window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_FULLSCREEN);
+	game->window = SDL_CreateWindow(GAME_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
 	if (!game->window) {
 		fprintf(stderr, "SDL couldn't create window, SDL_ERROR: %s\n", SDL_GetError());
 		return true;
@@ -92,7 +94,7 @@ void render_frame(Game *game) {
 void restart_game(Level **lvl) {
 	free_level(*lvl);
 	*lvl = initialize_default_level();
-	spawn_character(*lvl);
+	spawn_character(*lvl, WARRIOR);
 }
 
 int start_game(void) {

@@ -3,6 +3,7 @@
 #include "main_menu.h"
 #include "camera.h"
 #include "character.h"
+#include "classes.h"
 #include "game.h"
 #include "input.h"
 
@@ -110,7 +111,7 @@ void choose_main_menu_option(Game *game) {
 	switch (highlighted_option_index) {
 		case START_GAME:
 			game->lvl = initialize_default_level();
-			spawn_character(game->lvl);
+			spawn_character(game->lvl, WARRIOR);
 			initialize_camera(game->lvl);
 			initialize_input();
 			game->game_state=IN_PLAY;
