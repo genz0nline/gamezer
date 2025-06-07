@@ -1,7 +1,8 @@
-#include "utils.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "utils.h"
 
 float distance(Coordinate a, Coordinate b) {
 	float square = pow(a.x - b.x, 2) + pow(a.y - b.y, 2);

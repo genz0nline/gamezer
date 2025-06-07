@@ -1,21 +1,21 @@
-#include "instance.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <json.h>
 #include <string.h>
 
+#include "instance.h"
 #include "utils.h"
 
-const char *w_key = "w";
-const char *h_key = "h";
-const char *x_key = "x";
-const char *y_key = "y";
-const char *blocks_key = "blocks";
-const char *right_key = "right";
-const char *left_key = "left";
-const char *up_key = "up";
-const char *down_key = "down";
+const char *W_KEY = "w";
+const char *H_KEY = "h";
+const char *X_KEY = "x";
+const char *Y_KEY = "y";
+const char *BLOCKS_KEY = "blocks";
+const char *RIGHT_KEY = "right";
+const char *LEFT_KEY = "left";
+const char *UP_KEY = "up";
+const char *DOWN_KEY = "down";
 
 void load_block(struct json_value_s *value, Block *block) {
 	assert(value->type == json_type_object);
@@ -24,22 +24,22 @@ void load_block(struct json_value_s *value, Block *block) {
 
 	struct json_object_element_s *element = obj->start;
 	while (element != NULL) {
-		if (strncmp(w_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(W_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			block->w = atof(json_value_as_number(element->value)->number);
 		}
 
-		if (strncmp(h_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(H_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			block->w = atof(json_value_as_number(element->value)->number);
 		}
 
-		if (strncmp(x_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(X_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			block->x = atof(json_value_as_number(element->value)->number);
 		}
 
-		if (strncmp(y_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(Y_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			block->y = atof(json_value_as_number(element->value)->number);
 		}
@@ -82,33 +82,33 @@ Section *load_section(struct json_value_s *node) {
 
 	struct json_object_element_s *element = obj->start;
 	while (element != NULL) {
-		if (strncmp(w_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(W_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			section->w = atof(json_value_as_number(element->value)->number);
 		}
 
-		if (strncmp(h_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(H_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
 			section->h = atof(json_value_as_number(element->value)->number);
 		}
 
-		if (strncmp(blocks_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(BLOCKS_KEY, element->name->string, element->name->string_size) == 0) {
 			load_blocks(section, element->value);
 		}
 
-		if (strncmp(right_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(RIGHT_KEY, element->name->string, element->name->string_size) == 0) {
 			section->right=load_section(element->value);
 		}
 
-		if (strncmp(left_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(LEFT_KEY, element->name->string, element->name->string_size) == 0) {
 			section->left=load_section(element->value);
 		}
 
-		if (strncmp(up_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(UP_KEY, element->name->string, element->name->string_size) == 0) {
 			section->up=load_section(element->value);
 		}
 
-		if (strncmp(down_key, element->name->string, element->name->string_size) == 0) {
+		if (strncmp(DOWN_KEY, element->name->string, element->name->string_size) == 0) {
 			section->down=load_section(element->value);
 		}
 

@@ -1,5 +1,3 @@
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
