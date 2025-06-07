@@ -1,6 +1,8 @@
 #ifndef BLOCKS_H
 #define BLOCKS_H
 
+#include "utils.h"
+
 typedef struct Block {
 	float x, y;
 	float w, h;

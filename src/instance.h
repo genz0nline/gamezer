@@ -19,4 +19,8 @@ typedef struct Instance {
 	Section *start_section;
 } Instance;
 
+Instance *load_instance(int instance_id);
+void print_instance(Instance *instance);
+void unload_instance(Instance *instance);
+
 #endif // INSTANCE_H
