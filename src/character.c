@@ -1,6 +1,8 @@
-#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "character.h"
 #include "camera.h"
@@ -9,7 +11,6 @@
 #include "game.h"
 #include "input.h"
 #include "unit_func.h"
-#include "skills.h"
 
 const int DEFAULT_MAX_HP = 100;
 const int DEFAULT_SPEED = 10;
@@ -53,6 +54,14 @@ void spawn_character(Level *lvl, Character_Class character_class) {
 		default:
 			break;
 	}
+}
+
+SDL_Rect get_character_sprite_rect(void) {
+	int x, y, w, h;
+	calculate_m_to_p_dimesions(character.unit.h_m, character.unit.h_m, &w, &h);
+	calculate_m_to_p_coordinates(character.unit.x_m - .5 * (character.unit.h_m - character.unit.w_m), character.unit.y_m, &x, &y);
+	SDL_Rect block_rect = {x, y-h, w, h};
+	return block_rect;
 }
 
 SDL_Rect get_character_rect(void) {
@@ -213,10 +222,18 @@ void draw_character(SDL_Renderer *renderer, Level *lvl) {
 		return;
 
 	calculate_m_to_p_coefficients(lvl);
+	
+	SDL_Rect rect = get_character_sprite_rect();
+	SDL_Surface *character_surface = IMG_Load("src/static/wizard_64x64.png");
+	SDL_Texture *character_texture = SDL_CreateTextureFromSurface(renderer, character_surface);
+	SDL_FreeSurface(character_surface);
+	if (character.unit.direction == 1) 
+		SDL_RenderCopy(renderer, character_texture, NULL, &rect);
+	else
+		SDL_RenderCopyEx(renderer, character_texture, NULL, &rect, 0, NULL, SDL_FLIP_HORIZONTAL);
 
-	SDL_Rect rect = get_character_rect();
-	SDL_SetRenderDrawColor(renderer, character.unit.color.R, character.unit.color.G, character.unit.color.B, SDL_ALPHA_OPAQUE);
-	SDL_RenderFillRect(renderer, &rect);
+	// SDL_SetRenderDrawColor(renderer, character.unit.color.R, character.unit.color.G, character.unit.color.B, SDL_ALPHA_OPAQUE);
+	// SDL_RenderFillRect(renderer, &rect);
 
 	draw_health_bar(lvl, renderer);
 }

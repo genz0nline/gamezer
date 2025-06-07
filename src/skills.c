@@ -20,7 +20,7 @@ void initialize_skill_vicious_slash(Skill *skill) {
 	skill->resource = RESOURCE_FREE;
 	skill->cost = 0;
 	skill->damage = 55;
-	skill->range_m = 5;
+	skill->range_m = 2;
 	skill->cooldown = 500;
 	skill->cast_time = 0;
 	skill->projectile_speed_m = 0;

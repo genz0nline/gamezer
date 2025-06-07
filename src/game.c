@@ -1,3 +1,4 @@
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
@@ -46,6 +47,11 @@ bool initialize_sdl(Game *game) {
 
 	if (TTF_Init()) {
 		fprintf(stderr, "TTF couldn't initialize, TTF_Error: %s\n", TTF_GetError());
+		return true;
+	}
+
+	if (! (IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		fprintf(stderr, "IMG couldn't initialize, IMG_Error: %s\n", IMG_GetError());
 		return true;
 	}
 
