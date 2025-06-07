@@ -2,9 +2,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <json.h>
 #include <string.h>
 
-#include "../lib/json.h"
 #include "utils.h"
 
 const char *w_key = "w";
