@@ -1,6 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +6,6 @@
 #include <string.h>
 
 #include "instance.h"
-#include "camera.h"
-#include "coordinate_transformation.h"
 #include "utils.h"
 
 const char *W_KEY = "w";
@@ -36,7 +32,7 @@ void load_block(struct json_value_s *value, Block *block) {
 
 		if (strncmp(H_KEY, element->name->string, element->name->string_size) == 0) {
 			assert(element->value->type == json_type_number);
-			block->w = atof(json_value_as_number(element->value)->number);
+			block->h = atof(json_value_as_number(element->value)->number);
 		}
 
 		if (strncmp(X_KEY, element->name->string, element->name->string_size) == 0) {
@@ -88,6 +84,7 @@ Section *load_section(struct json_value_s *node) {
 	struct json_object_element_s *element = obj->start;
 	while (element != NULL) {
 		if (strncmp(W_KEY, element->name->string, element->name->string_size) == 0) {
+			printf("I am here\n");
 			assert(element->value->type == json_type_number);
 			section->w = atof(json_value_as_number(element->value)->number);
 		}

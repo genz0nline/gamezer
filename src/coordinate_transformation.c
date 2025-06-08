@@ -32,7 +32,7 @@ SDL_Rect get_rectangle(Game *game, float x_m, float y_m, float w_m, float h_m) {
 
 	SDL_Rect rect = {
 		.x = screen_coordinate.x,
-		.y = screen_coordinate.y,
+		.y = screen_coordinate.y - screen_dimensions.h,
 		.w = screen_dimensions.w,
 		.h = screen_dimensions.h,
 	};

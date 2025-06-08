@@ -1,5 +1,7 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_scancode.h>
+#include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_video.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <SDL2/SDL.h>
@@ -50,7 +52,7 @@ void initialize_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	game->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN);
+	game->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (game->window == NULL) {
 		fprintf(stderr, "Couldn't create window, SDL_Error: %s\n", SDL_GetError());
 		cleanup_game(game, EXIT_FAILURE);
@@ -71,6 +73,18 @@ void initialize_game(Game *game) {
 };
 
 void run_game(Game *game) {
+
+	game->instance = load_instance(1);
+	if (game->instance == NULL) {
+		cleanup_game(game, EXIT_FAILURE);
+	}
+
+	if (game->instance->start_section == NULL) {
+		cleanup_game(game, EXIT_FAILURE);
+	}
+
+	print_instance(game->instance);
+
 	SDL_Event event;
 	while (true) {
 		while (SDL_PollEvent(&event)) {
@@ -107,20 +121,10 @@ void run_game(Game *game) {
 		SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(game->renderer);
 
-		game->instance = load_instance(1);
-
-		if (game->instance == NULL) {
-			printf("instance\n");
-			exit(2);
-		}
-
-		if (game->instance->start_section == NULL) {
-			printf("section\n");
-			exit(2);
-		}
-
-		render_section(game, game->instance->start_section, game->camera);
+		render_section(game, game->instance->start_section);
 
 		SDL_RenderPresent(game->renderer);
+
+		SDL_Delay(DEFAULT_RENDER_DELAY);
 	}
 }

@@ -5,6 +5,6 @@
 #include "instance.h"
 #include "game.h"
 
-void render_section(Game *game, Section *section, Camera *camera);
+void render_section(Game *game, Section *section);
 
 #endif // RENDER_H

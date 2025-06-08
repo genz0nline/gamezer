@@ -22,9 +22,11 @@ void free_camera(Camera *camera) {
 void zoom_in(Camera *camera) {
 	camera->zoom_factor -= .3;
 	camera->zoom_factor = MAX(MIN_ZOOM_FACTOR, camera->zoom_factor);
+	printf("New zoom_factor = %f\n", camera->zoom_factor);
 }
 
 void zoom_out(Camera *camera) {
 	camera->zoom_factor += .3;
 	camera->zoom_factor = MIN(MAX_ZOOM_FACTOR, camera->zoom_factor);
+	printf("New zoom_factor = %f\n", camera->zoom_factor);
 }

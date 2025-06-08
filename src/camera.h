@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 
 #define CAPTURE_WINDOW_WIDTH_PER_ZF			2
-#define DEFAULT_ZOOM_FACTOR					10
+#define DEFAULT_ZOOM_FACTOR					100
 #define MIN_ZOOM_FACTOR						1
 #define MAX_ZOOM_FACTOR						100
 
