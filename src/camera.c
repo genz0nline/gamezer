@@ -6,8 +6,8 @@
 Camera *initialize_camera(void) {
 	Camera *camera = (Camera *)malloc(sizeof(Camera));
 
-	camera->position.x = 0;
-	camera->position.y = 0;
+	camera->position.x = 20;
+	camera->position.y = 15;
 	camera->zoom_factor = DEFAULT_ZOOM_FACTOR;
 
 	return camera;

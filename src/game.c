@@ -13,6 +13,7 @@
 #include "render.h"
 #include "game.h"
 #include "camera.h"
+#include "units.h"
 
 const char *title = "Gamezer";
 const int IMG_INIT_FLAGS = IMG_INIT_PNG;
@@ -85,6 +86,13 @@ void run_game(Game *game) {
 
 	print_instance(game->instance);
 
+	Unit unit = {
+		.x = 3.,
+		.y = 2.,
+		.w = 1.,
+		.h = 2.,
+	};
+
 	SDL_Event event;
 	while (true) {
 		while (SDL_PollEvent(&event)) {
@@ -106,6 +114,18 @@ void run_game(Game *game) {
 						case SDL_SCANCODE_DOWN:
 							game->camera->position.y -= 1;
 							break;
+						case SDL_SCANCODE_W:
+							unit.y += 1;
+							break;
+						case SDL_SCANCODE_A:
+							unit.x -= 1;
+							break;
+						case SDL_SCANCODE_S:
+							unit.y -= 1;
+							break;
+						case SDL_SCANCODE_D:
+							unit.x += 1;
+							break;
 						case SDL_SCANCODE_MINUS:
 							zoom_out(game->camera);
 							break;
@@ -122,6 +142,7 @@ void run_game(Game *game) {
 		SDL_RenderClear(game->renderer);
 
 		render_section(game, game->instance->start_section);
+		render_unit(game, &unit);
 
 		SDL_RenderPresent(game->renderer);
 
