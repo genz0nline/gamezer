@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include "instance.h"
+#include "camera.h"
 
 #define DEFAULT_SCREEN_WIDTH		1920
 #define DEFAULT_SCREEN_HEIGHT		1080
@@ -14,14 +15,16 @@ typedef enum {
 } GameState;
 
 typedef struct Game {
-	int w, h;
+	int screen_width, screen_height;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
+	Camera *camera;
 	GameState game_state;
 	Instance *instance;
 } Game;
 
 void cleanup_game(Game *game, int error_code);
 void initialize_game(Game *game);
+void run_game(Game *game);
 
 #endif // GAME_H

@@ -1,13 +1,13 @@
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+
 #include "game.h"
-#include "instance.h"
 
 int main(void) {
 	Game game;
 	initialize_game(&game);
 
-	Instance *instance = load_instance(1);
-	print_instance(instance);
+	run_game(&game);
 
 	cleanup_game(&game, EXIT_SUCCESS);
-	return 0;
 }

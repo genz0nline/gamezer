@@ -1,3 +1,6 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_render.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,6 +8,8 @@
 #include <string.h>
 
 #include "instance.h"
+#include "camera.h"
+#include "coordinate_transformation.h"
 #include "utils.h"
 
 const char *W_KEY = "w";
@@ -139,6 +144,7 @@ void print_blocks(Section *section) {
 		printf("\t(%f, %f, %f, %f)\n", (section->blocks + i)->w, (section->blocks + i)->h, (section->blocks + i)->x, (section->blocks + i)->y); 
 	}
 }
+
 
 void print_section(Section *section) {
 	if (section == NULL)

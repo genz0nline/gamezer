@@ -21,6 +21,7 @@ typedef struct Instance {
 
 Instance *load_instance(int instance_id);
 void print_instance(Instance *instance);
+void print_section(Section *section);
 void unload_instance(Instance *instance);
 
 #endif // INSTANCE_H
