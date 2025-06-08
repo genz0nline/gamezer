@@ -11,7 +11,7 @@
 
 typedef struct {
 	Coordinate position;
-	float zoom_factor;
+	int zoom_factor;
 } Camera;
 
 Camera *initialize_camera(void);

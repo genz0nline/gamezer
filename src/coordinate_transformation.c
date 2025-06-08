@@ -20,8 +20,8 @@ ScreenDimensions get_screen_dimensions(Game *game, Dimensions game_dimentions) {
 	float capture_window_height_per_zf = (float) CAPTURE_WINDOW_WIDTH_PER_ZF * game->screen_height / game->screen_width;
 
 	return (ScreenDimensions) {
-		.w = (int) ((game->screen_width * game_dimentions.w) / (game->camera->zoom_factor * CAPTURE_WINDOW_WIDTH_PER_ZF)),
-		.h = (int) ((game->screen_height * game_dimentions.h) / (game->camera->zoom_factor * capture_window_height_per_zf)),
+		.w = (int) ((game->screen_width * game_dimentions.w) / ((float) game->camera->zoom_factor * CAPTURE_WINDOW_WIDTH_PER_ZF)),
+		.h = (int) ((game->screen_height * game_dimentions.h) / ((float) game->camera->zoom_factor * capture_window_height_per_zf)),
 	};
 }
 
