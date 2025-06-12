@@ -73,6 +73,37 @@ void initialize_game(Game *game) {
 	}
 };
 
+void handle_event(Game *game, SDL_Event *event) {
+	switch (event->type) {
+		case SDL_QUIT:
+			cleanup_game(game, EXIT_SUCCESS);
+			break;
+		case SDL_KEYDOWN:
+			switch (event->key.keysym.scancode) {
+				case SDL_SCANCODE_LEFT:
+					game->camera->position.x -= 1;
+					break;
+				case SDL_SCANCODE_RIGHT:
+					game->camera->position.x += 1;
+					break;
+				case SDL_SCANCODE_UP:
+					game->camera->position.y += 1;
+					break;
+				case SDL_SCANCODE_DOWN:
+					game->camera->position.y -= 1;
+					break;
+				case SDL_SCANCODE_MINUS:
+					zoom_out(game->camera);
+					break;
+				case SDL_SCANCODE_EQUALS:
+					zoom_in(game->camera);
+					break;
+				default:
+					break;
+			}
+	}
+}
+
 void run_game(Game *game) {
 
 	game->instance = load_instance(1);
@@ -84,65 +115,15 @@ void run_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	print_instance(game->instance);
-
-	Unit unit = {
-		.x = 3.,
-		.y = 2.,
-		.w = 1.,
-		.h = 2.,
-	};
-
 	SDL_Event event;
 	while (true) {
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-				case SDL_QUIT:
-					cleanup_game(game, EXIT_SUCCESS);
-					break;
-				case SDL_KEYDOWN:
-					switch (event.key.keysym.scancode) {
-						case SDL_SCANCODE_LEFT:
-							game->camera->position.x -= 1;
-							break;
-						case SDL_SCANCODE_RIGHT:
-							game->camera->position.x += 1;
-							break;
-						case SDL_SCANCODE_UP:
-							game->camera->position.y += 1;
-							break;
-						case SDL_SCANCODE_DOWN:
-							game->camera->position.y -= 1;
-							break;
-						case SDL_SCANCODE_W:
-							unit.y += 1;
-							break;
-						case SDL_SCANCODE_A:
-							unit.x -= 1;
-							break;
-						case SDL_SCANCODE_S:
-							unit.y -= 1;
-							break;
-						case SDL_SCANCODE_D:
-							unit.x += 1;
-							break;
-						case SDL_SCANCODE_MINUS:
-							zoom_out(game->camera);
-							break;
-						case SDL_SCANCODE_EQUALS:
-							zoom_in(game->camera);
-							break;
-						default:
-							break;
-					}
-			}
-		}
+		while (SDL_PollEvent(&event))
+			handle_event(game, &event);
 
 		SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(game->renderer);
 
 		render_section(game, game->instance->start_section);
-		render_unit(game, &unit);
 
 		SDL_RenderPresent(game->renderer);
 

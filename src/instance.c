@@ -130,6 +130,8 @@ Instance *load_instance(int instance_id) {
 
 	struct json_value_s *root = json_parse(instance_json, strlen(instance_json));
 	instance->start_section = load_section(root);
+	instance->current_section = instance->start_section;
+	instance->entry = ENTRY_LEFT;
 
 	free(root);
 

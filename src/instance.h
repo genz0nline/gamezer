@@ -15,8 +15,17 @@ typedef struct Section {
 	struct Section *down;
 } Section;
 
+typedef enum {
+	ENTRY_LEFT,
+	ENTRY_RIGHT,
+	ENTRY_TOP,
+	ENTRY_BOTTOM,
+} Entry;
+
 typedef struct Instance {
 	Section *start_section;
+	Section *current_section;
+	Entry entry;
 } Instance;
 
 Instance *load_instance(int instance_id);
