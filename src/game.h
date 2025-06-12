@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "instance.h"
 #include "camera.h"
+#include "input.h"
 
 #define DEFAULT_SCREEN_WIDTH		1200
 #define DEFAULT_SCREEN_HEIGHT		900
@@ -22,6 +23,7 @@ typedef struct Game {
 	Camera *camera;
 	GameState game_state;
 	Instance *instance;
+	Input *input;
 } Game;
 
 void cleanup_game(Game *game, int error_code);

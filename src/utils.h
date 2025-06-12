@@ -1,8 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#define MAX(A,B)		(A) > (B) ? (A) : (B)
-#define MIN(A,B)		(A) < (B) ? (A) : (B)
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 typedef struct {
 	float x, y;

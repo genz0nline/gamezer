@@ -84,7 +84,6 @@ Section *load_section(struct json_value_s *node) {
 	struct json_object_element_s *element = obj->start;
 	while (element != NULL) {
 		if (strncmp(W_KEY, element->name->string, element->name->string_size) == 0) {
-			printf("I am here\n");
 			assert(element->value->type == json_type_number);
 			section->w = atof(json_value_as_number(element->value)->number);
 		}
