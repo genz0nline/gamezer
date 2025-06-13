@@ -1,3 +1,4 @@
+#include <SDL2/SDL_video.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -52,7 +53,7 @@ void initialize_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	game->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	game->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN);
 	if (game->window == NULL) {
 		fprintf(stderr, "Couldn't create window, SDL_Error: %s\n", SDL_GetError());
 		cleanup_game(game, EXIT_FAILURE);
@@ -105,7 +106,7 @@ void run_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	game->character = initialize_character();
+	game->character = initialize_character(game);
 	if (game->character == NULL) {
 		fprintf(stderr, "Couldn't initialize character\n");
 		cleanup_game(game, EXIT_FAILURE);

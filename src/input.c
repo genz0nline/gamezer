@@ -21,9 +21,11 @@ void press_button(Game *game, SDL_Scancode scancode) {
 	switch (scancode) {
 		case SDL_SCANCODE_LEFT:
 			game->input->left_pressed = true;
+			game->character->unit.direction = -1;
 			break;
 		case SDL_SCANCODE_RIGHT:
 			game->input->right_pressed = true;
+			game->character->unit.direction = 1;
 			break;
 		case SDL_SCANCODE_UP:
 			character_start_jump(game->character);
