@@ -9,6 +9,7 @@
 #include "input.h"
 #include "units.h"
 #include "coordinate_transformation.h"
+#include "classes.h"
 #include "collisions.h"
 #include "constants.h"
 #include "instance.h"
@@ -175,7 +176,7 @@ SDL_Rect get_unit_rect(Game *game, Unit *unit) {
 	return get_rectangle(game, unit->x, unit->y, unit->w, unit->h);
 }
 
-Character *initialize_character(Game *game) {
+Character *initialize_character(Game *game, int class_id) {
 	Character *character = (Character *)malloc(sizeof(Character));
 	character->unit.x = 4;
 	character->unit.y = 10;
@@ -194,8 +195,11 @@ Character *initialize_character(Game *game) {
 	character->jump_start_tick = 0;
 	character->jump_force_max_duration = 100;
 
+	// class
+	character->character_class = load_character_class(class_id);
+	
 	// texture
-	character->unit.sprite_id = 1;
+	character->unit.sprite_id = character->character_class->sprite_id;
 	character->unit.texture = get_unit_texture(game, &character->unit);
 
 	return character;
@@ -207,6 +211,9 @@ void cleanup_character(Character *character) {
 
 	if (character->unit.texture != NULL)
 		free(character->unit.texture);
+
+	if (character->character_class != NULL)
+		free(character->character_class);
 
 	free(character);
 }

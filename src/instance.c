@@ -19,6 +19,7 @@ const char *LEFT_KEY = "left";
 const char *UP_KEY = "up";
 const char *DOWN_KEY = "down";
 
+
 void load_block(struct json_value_s *value, Block *block) {
 	assert(value->type == json_type_object);
 
@@ -121,7 +122,7 @@ Section *load_section(struct json_value_s *node) {
 }
 
 Instance *load_instance(int instance_id) {
-	char file_name[100];
+	char file_name[MAX_INSTANCE_FILE_NAME];
 	sprintf(file_name, "src/static/instances/%d.json", instance_id);
 
 	Instance *instance = (Instance *)malloc(sizeof(Instance));

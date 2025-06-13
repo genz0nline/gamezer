@@ -1,0 +1,10 @@
+[
+	{
+		"class_name": "warrior",
+		"class_id": 1
+	},
+	{
+		"class_name": "mage",
+		"class_id": 2
+	}
+]

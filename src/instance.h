@@ -1,6 +1,8 @@
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
+#define MAX_INSTANCE_FILE_NAME		100
+
 typedef struct Block Block;
 
 typedef struct Section {

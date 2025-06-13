@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+typedef struct CharacterClass CharacterClass;
+
 typedef struct Unit {
 	float x, y;
 	float w, h;
@@ -24,6 +26,7 @@ typedef struct Character {
 	Uint32 jump_finish_tick;
 	int jump_force_max_duration;
 	float jump_force;
+	CharacterClass *character_class;
 } Character;
 
 typedef struct Game Game;
@@ -34,7 +37,7 @@ void calculate_unit_position(Game *game, Unit *unit, bool *landed);
 void render_unit(Game *game, Unit *unit);
 SDL_Rect get_unit_texture_rext(Game *game, Unit *unit);
 SDL_Rect get_unit_rect(Game *game, Unit *unit);
-Character *initialize_character(Game *game);
+Character *initialize_character(Game *game, int class_id);
 void cleanup_character(Character *character);
 void character_start_jump(Character *character);
 void character_finish_jump(Character *character);
