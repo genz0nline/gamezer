@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 
 #include "math.h"
+#include "input.h"
 #include "units.h"
 #include "coordinate_transformation.h"
 #include "collisions.h"
@@ -9,6 +10,9 @@
 #include "instance.h"
 
 void character_start_jump(Character *character) {
+	if (character->jumped_twice || character->jump_start_tick > character->jump_finish_tick)
+		return;
+
 	if (!character->jumped) {
 		if (character->unit.speed_y != 0.0)
 			character->jumped_twice = true;
@@ -16,7 +20,7 @@ void character_start_jump(Character *character) {
 		character->jumping = true;
 		character->jump_start_tick = SDL_GetTicks();
 		character->unit.speed_y = 0;
-	} else if (!character->jumped_twice) {
+	} else {
 		character->jumped_twice = true;
 		character->jumping = true;
 		character->jump_start_tick = SDL_GetTicks();

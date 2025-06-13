@@ -119,7 +119,7 @@ void run_game(Game *game) {
 		// Calculating game state
 		calculate_character_speed(game);
 		calculate_character_position(game);
-		update_camera_state(game->input, game->camera);
+		update_camera_state(game, game->camera);
 
 		// render outer space
 		SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
