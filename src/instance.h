@@ -1,7 +1,7 @@
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
-#include "blocks.h"
+typedef struct Block Block;
 
 typedef struct Section {
 	float w, h;

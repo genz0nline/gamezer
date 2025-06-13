@@ -1,10 +1,12 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+
 #include "math.h"
 #include "units.h"
 #include "coordinate_transformation.h"
 #include "collisions.h"
 #include "constants.h"
+#include "instance.h"
 
 void character_start_jump(Character *character) {
 	if (!character->jumped) {

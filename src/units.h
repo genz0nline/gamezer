@@ -2,7 +2,6 @@
 #define UNITS_H
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_stdinc.h>
 
 typedef struct Unit {
 	float x, y;

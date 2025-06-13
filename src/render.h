@@ -1,9 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "camera.h"
-#include "instance.h"
-#include "game.h"
+typedef struct Game Game;
+typedef struct Section Section;
 
 void render_section(Game *game, Section *section);
 

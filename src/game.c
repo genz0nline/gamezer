@@ -1,16 +1,16 @@
-#include <stdbool.h>
+#include <time.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
-#include <time.h>
 
-#include "input.h"
-#include "instance.h"
-#include "render.h"
 #include "game.h"
-#include "camera.h"
+#include "input.h"
 #include "units.h"
+#include "render.h"
+#include "camera.h"
+#include "instance.h"
 
 const char *title = "Gamezer";
 const int IMG_INIT_FLAGS = IMG_INIT_PNG;
@@ -116,14 +116,16 @@ void run_game(Game *game) {
 		while (SDL_PollEvent(&event))
 			handle_event(game, &event);
 
+		// Calculating game state
+		calculate_character_speed(game);
+		calculate_character_position(game);
 		update_camera_state(game->input, game->camera);
 
+		// render outer space
 		SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(game->renderer);
 
-		calculate_character_speed(game);
-		calculate_character_position(game);
-
+		// render everything
 		render_section(game, game->instance->start_section);
 		render_unit(game, &game->character->unit);
 

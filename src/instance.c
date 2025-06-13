@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "instance.h"
+#include "blocks.h"
 #include "utils.h"
 
 const char *W_KEY = "w";

@@ -1,7 +1,9 @@
+#include <SDL2/SDL.h>
+
 #include "render.h"
 #include "coordinate_transformation.h"
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
+#include "blocks.h"
+#include "instance.h"
 
 
 void render_block(Game *game, Block *block) {

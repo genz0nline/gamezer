@@ -2,14 +2,14 @@
 #define GAME_H
 
 #include <SDL2/SDL.h>
-#include "instance.h"
-#include "camera.h"
-#include "input.h"
 
 #define DEFAULT_SCREEN_WIDTH		1200
 #define DEFAULT_SCREEN_HEIGHT		900
 #define DEFAULT_RENDER_DELAY		10
 
+typedef struct Camera Camera;
+typedef struct Instance Instance;
+typedef struct Input Input;
 typedef struct Character Character;
 
 typedef enum {
