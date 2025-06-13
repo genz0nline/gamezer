@@ -1,44 +1,57 @@
+#include <stdbool.h>
+#include <SDL2/SDL.h>
+#include "math.h"
 #include "units.h"
 #include "coordinate_transformation.h"
 #include "collisions.h"
 #include "constants.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_timer.h>
-#include "math.h"
 
-void calculate_character_speed(Game *game, Character *character) {
-	character->unit.speed_x = game->input->right_pressed  ? character->unit.max_speed_x
-		: game->input->left_pressed ? -character->unit.max_speed_x
+void character_start_jump(Character *character) {
+	if (!character->jumped) {
+		if (character->unit.speed_y != 0.0)
+			character->jumped_twice = true;
+		character->jumped = true;
+		character->jumping = true;
+		character->jump_start_tick = SDL_GetTicks();
+		character->unit.speed_y = 0;
+	} else if (!character->jumped_twice) {
+		character->jumped_twice = true;
+		character->jumping = true;
+		character->jump_start_tick = SDL_GetTicks();
+		character->unit.speed_y = 0;
+	}
+}
+
+void character_finish_jump(Character *character) {
+	character->jumping = false;
+	character->jump_finish_tick = SDL_GetTicks();
+}
+
+void calculate_character_speed(Game *game) {
+	game->character->unit.speed_x = game->input->right_pressed  ? game->character->unit.max_speed_x
+		: game->input->left_pressed ? -game->character->unit.max_speed_x
 		: 0;
 
-	Uint32 tick = SDL_GetTicks();
-	int milliseconds;
-
-	if (game->input->up_pressed) {
-		if (!character->jumped) {
-			character->jump_start_tick = tick;
-			character->jumped = true;
-			character->unit.speed_y = 0;
-		} else {
-			printf("In jump\n");
-			milliseconds = tick - character->jump_start_tick;
-			if (milliseconds < character->jump_force_max_duration) {
-				character->unit.speed_y += character->jump_force * milliseconds / 1000;
-			}
-			character->unit.speed_y -= GRAVITY;
+	bool jumping = false;
+	if (game->character->jumping) {
+		int milliseconds = SDL_GetTicks() - game->character->jump_start_tick;
+		if (milliseconds < game->character->jump_force_max_duration) {
+			jumping = true;
+			game->character->unit.speed_y += game->character->jump_force * milliseconds / 1000;
 		}
-	} else {
-		character->unit.speed_y -= GRAVITY;
 	}
+
+	if (!jumping)
+		game->character->unit.speed_y -= GRAVITY;
 
 }
 
-void calculate_character_position(Game *game, Character *character) {
+void calculate_character_position(Game *game) {
 	bool landed;
-	calculate_unit_position(game, &character->unit, &landed);
+	calculate_unit_position(game, &game->character->unit, &landed);
 	if (landed) {
-		character->jumped = false;
+		game->character->jumped = false;
+		game->character->jumped_twice = false;
 	}
 }
 
@@ -115,7 +128,8 @@ Character *initialize_character() {
 	character->unit.direction = 1;
 	character->unit.last_update_tick = SDL_GetTicks();
 	character->jumped = false;
-	character->jump_force = 100;
+	character->jumping = false;
+	character->jump_force = 80;
 	character->jump_start_tick = 0;
 	character->jump_force_max_duration = 100;
 

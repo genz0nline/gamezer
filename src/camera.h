@@ -10,7 +10,7 @@
 #define MIN_ZOOM_FACTOR						1
 #define MAX_ZOOM_FACTOR						100
 
-typedef struct {
+typedef struct Camera {
 	Coordinate position;
 	float zoom_factor;
 	float zoom_speed;

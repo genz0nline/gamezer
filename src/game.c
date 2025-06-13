@@ -84,10 +84,10 @@ void handle_event(Game *game, SDL_Event *event) {
 			cleanup_game(game, EXIT_SUCCESS);
 			break;
 		case SDL_KEYDOWN:
-			press_button(game->input, event->key.keysym.scancode);
+			press_button(game, event->key.keysym.scancode);
 			break;
 		case SDL_KEYUP:
-			unpress_button(game->input, event->key.keysym.scancode);
+			unpress_button(game, event->key.keysym.scancode);
 			break;
 	}
 }
@@ -105,8 +105,8 @@ void run_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	Character *character = initialize_character();
-	if (character == NULL) {
+	game->character = initialize_character();
+	if (game->character == NULL) {
 		fprintf(stderr, "Couldn't initialize character\n");
 		cleanup_game(game, EXIT_FAILURE);
 	}
@@ -121,11 +121,11 @@ void run_game(Game *game) {
 		SDL_SetRenderDrawColor(game->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(game->renderer);
 
-		calculate_character_speed(game, character);
-		calculate_character_position(game, character);
+		calculate_character_speed(game);
+		calculate_character_position(game);
 
 		render_section(game, game->instance->start_section);
-		render_unit(game, &character->unit);
+		render_unit(game, &game->character->unit);
 
 		SDL_RenderPresent(game->renderer);
 

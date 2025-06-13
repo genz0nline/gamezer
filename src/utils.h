@@ -4,19 +4,19 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-typedef struct {
+typedef struct Coordinate {
 	float x, y;
 } Coordinate;
 
-typedef struct {
+typedef struct ScreenCoordinate {
 	int x, y;
 } ScreenCoordinate;
 
-typedef struct {
+typedef struct Dimensions {
 	float w, h;
 } Dimensions;
 
-typedef struct {
+typedef struct ScreenDimensions {
 	int w, h;
 } ScreenDimensions;
 

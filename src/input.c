@@ -1,6 +1,8 @@
 #include "input.h"
 #include <SDL2/SDL_scancode.h>
 #include <stdlib.h>
+#include "game.h"
+#include "units.h"
 
 Input *initialize_input(void) {
 	Input *input = (Input *)malloc(sizeof(Input));
@@ -15,50 +17,50 @@ Input *initialize_input(void) {
 	return input;
 }
 
-void press_button(Input *input, SDL_Scancode scancode) {
+void press_button(Game *game, SDL_Scancode scancode) {
 	switch (scancode) {
 		case SDL_SCANCODE_LEFT:
-			input->left_pressed = true;
+			game->input->left_pressed = true;
 			break;
 		case SDL_SCANCODE_RIGHT:
-			input->right_pressed = true;
+			game->input->right_pressed = true;
 			break;
 		case SDL_SCANCODE_UP:
-			input->up_pressed = true;
+			character_start_jump(game->character);
 			break;
 		case SDL_SCANCODE_DOWN:
-			input->down_pressed = true;
+			game->input->down_pressed = true;
 			break;
 		case SDL_SCANCODE_MINUS:
-			input->minus_pressed = true;
+			game->input->minus_pressed = true;
 			break;
 		case SDL_SCANCODE_EQUALS:
-			input->equals_pressed = true;
+			game->input->equals_pressed = true;
 			break;
 		default:
 			break;
 	}
 }
 
-void unpress_button(Input *input, SDL_Scancode scancode) {
+void unpress_button(Game *game, SDL_Scancode scancode) {
 	switch (scancode) {
 		case SDL_SCANCODE_LEFT:
-			input->left_pressed = false;
+			game->input->left_pressed = false;
 			break;
 		case SDL_SCANCODE_RIGHT:
-			input->right_pressed = false;
+			game->input->right_pressed = false;
 			break;
 		case SDL_SCANCODE_UP:
-			input->up_pressed = false;
+			character_finish_jump(game->character);
 			break;
 		case SDL_SCANCODE_DOWN:
-			input->down_pressed = false;
+			game->input->down_pressed = false;
 			break;
 		case SDL_SCANCODE_MINUS:
-			input->minus_pressed = false;
+			game->input->minus_pressed = false;
 			break;
 		case SDL_SCANCODE_EQUALS:
-			input->equals_pressed = false;
+			game->input->equals_pressed = false;
 			break;
 		default:
 			break;

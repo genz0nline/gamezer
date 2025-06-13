@@ -10,6 +10,8 @@
 #define DEFAULT_SCREEN_HEIGHT		900
 #define DEFAULT_RENDER_DELAY		10
 
+typedef struct Character Character;
+
 typedef enum {
 	GAME_STATE_MAIN_MENU,
 	GAME_STATE_INSTANCE,
@@ -24,6 +26,7 @@ typedef struct Game {
 	GameState game_state;
 	Instance *instance;
 	Input *input;
+	Character *character;
 } Game;
 
 void cleanup_game(Game *game, int error_code);
