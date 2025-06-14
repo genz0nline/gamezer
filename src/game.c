@@ -106,7 +106,7 @@ void run_game(Game *game) {
 		cleanup_game(game, EXIT_FAILURE);
 	}
 
-	game->character = initialize_character(game, 2);
+	game->character = initialize_character(game, 1);
 	if (game->character == NULL) {
 		fprintf(stderr, "Couldn't initialize character\n");
 		cleanup_game(game, EXIT_FAILURE);

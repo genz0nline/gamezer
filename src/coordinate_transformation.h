@@ -1,9 +1,13 @@
 #ifndef COORDINATE_TRANSFORMATION_H
 #define COORDINATE_TRANSFORMATION_H
 
-#include "utils.h"
-#include "game.h"
-#include "camera.h"
+#include <SDL2/SDL.h>
+
+typedef struct ScreenCoordinate ScreenCoordinate;
+typedef struct ScreenDimensions ScreenDimensions;
+typedef struct Game Game;
+typedef struct Dimensions Dimensions;
+typedef struct Coordinate Coordinate;
 
 ScreenCoordinate get_screen_coordinate(Game *game, Coordinate game_coordinate);
 ScreenDimensions get_screen_dimensions(Game *game, Dimensions game_dimentions);

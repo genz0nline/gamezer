@@ -4,6 +4,7 @@
 #include "coordinate_transformation.h"
 #include "blocks.h"
 #include "instance.h"
+#include "game.h"
 
 
 void render_block(Game *game, Block *block) {

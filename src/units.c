@@ -6,11 +6,13 @@
 #include <stdio.h>
 
 #include "math.h"
+#include "game.h"
+#include "blocks.h"
 #include "input.h"
 #include "units.h"
+#include "collisions.h"
 #include "coordinate_transformation.h"
 #include "classes.h"
-#include "collisions.h"
 #include "constants.h"
 #include "instance.h"
 

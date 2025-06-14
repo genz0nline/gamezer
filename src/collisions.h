@@ -3,7 +3,9 @@
 
 #include <stdbool.h>
 #include "units.h"
-#include "blocks.h"
+
+
+typedef struct Block Block;
 
 typedef enum {
 	AXIS_X,

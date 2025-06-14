@@ -1,6 +1,7 @@
+#include <math.h>
 #include "collisions.h"
 #include "utils.h"
-#include <math.h>
+#include "blocks.h"
 
 float check_collision(Unit *unit, Block *block, int milliseconds, Axis *axis) {
 	float dxEntry, dxExit;
